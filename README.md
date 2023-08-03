@@ -1,16 +1,22 @@
-Scrum-Poker Web Application
+## Scrum-Poker Web Application
 
-Introduction
+## Scrum-Poker: An Overview
 
-Scrum-Poker is an Agile planning and estimating technique that allows teams to assess the time required to complete stories in a sprint. This real-time Scrum-Poker web application is built using Angular, and it utilizes WebSockets for instant data updates between clients and the server.
+Scrum-Poker, also known as Planning Poker, is a consensus-based Agile planning and estimating technique. Team members use physical cards resembling playing cards to estimate the effort needed to complete each task or story in a sprint. This app facilitates the process in a real-time collaborative environment, thanks to WebSockets.
 
-Technologies Used
+## WebSocket Communication
+
+The application establishes a WebSocket connection to the server using the URL `ws://localhost:8000/ws`. This WebSocket allows real-time communication between the client and the server, enabling instant data updates.
+
+This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.1.6.
+
+## Technologies Used
 
 - Angular v16.1.6
 - Angular Material v16.1.6
 - Tailwind CSS v3.3.3
 
-Getting Started
+## Getting Started
 
 To run this application locally on your machine, follow these steps:
 
@@ -30,21 +36,32 @@ To run this application locally on your machine, follow these steps:
 
 5. Open your web browser and go to `http://localhost:4200` to access the application.
 
-Folder Structure
+## Code scaffolding
+
+Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+## Build
+
+Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+
+## Running unit tests
+
+Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+
+## Running end-to-end tests
+
+Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+
+## Further help
+
+To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+
+
+## Folder Structure
 
 `src/app/landing-page`: Contains the initial landing page component.
 `src/app/shared/services/storage.service`: Provides a service for fetching data from components and storing it efficiently.
 `src/app/app-routing.module`: Handles the routing in the app, enabling seamless navigation between different components.
-
-Scrum-Poker: An Overview
-
-Scrum-Poker, also known as Planning Poker, is a consensus-based Agile planning and estimating technique. Team members use physical cards resembling playing cards to estimate the effort needed to complete each task or story in a sprint. This app facilitates the process in a real-time collaborative environment, thanks to WebSockets.
-
-WebSocket Communication
-
-The application establishes a WebSocket connection to the server using the URL `ws://localhost:8000/ws`. This WebSocket allows real-time communication between the client and the server, enabling instant data updates.
-
-
 
 
 
