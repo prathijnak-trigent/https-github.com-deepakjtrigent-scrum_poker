@@ -15,3 +15,11 @@ html, body { height: 100%; }
 --text-color:#848b99;
 }
 
+html,
+body {
+  height: 100%;
+  scroll-behavior: smooth;
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
