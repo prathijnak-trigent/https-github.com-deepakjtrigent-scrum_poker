@@ -1,7 +1,7 @@
 <div class="main h-screen w-screen flex flex-col justify-between">
   <div class="flex-grow flex flex-col items-center justify-end mb-2">
     <div class="flex justify-evenly space-x-2 flex-wrap">
-      <ng-container *ngFor="let points of card_count; let index = index">
+      <ng-container *ngFor="let points of cardCounts; let index = index">
         <button
           (click)="toggleActive(index)"
           id="card_button"
