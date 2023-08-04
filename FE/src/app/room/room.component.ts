@@ -6,8 +6,9 @@ import { cardCount } from '../shared/app-data/scrum-points-series';
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
 })
+
 export class RoomComponent {
-  
+
   public cardCounts: number[] = cardCount;
   public activeIndex: number = -1;
 
