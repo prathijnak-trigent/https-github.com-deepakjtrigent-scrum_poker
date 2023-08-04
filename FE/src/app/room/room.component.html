@@ -1,0 +1,16 @@
+<div class="main h-screen w-screen flex flex-col justify-between">
+  <div class="flex-grow flex flex-col items-center justify-end mb-2">
+    <div class="flex justify-evenly space-x-2 flex-wrap">
+      <ng-container *ngFor="let points of cardCounts; let index = index">
+        <button
+          (click)="toggleActive(index)"
+          id="card_button"
+          [class.active-button]="activeIndex === index"
+          class="card-hover hover:bg-primary-color active:bg-primary-shade-color w-[56px] h-[84px] rounded-md bg-white text-gray-800 mt-3 font-semibold py-2 px-4 border border-gray-800 shadow-md transition"
+        >
+          {{ points }}
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</div>
