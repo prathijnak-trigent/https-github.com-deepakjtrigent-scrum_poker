@@ -1,6 +1,5 @@
 import json
 
-
 def load_data(filename):
     try:
         with open(filename, 'r') as file:

@@ -18,14 +18,14 @@ async def create_room():
         room_id = str(uuid.uuid4())
         room_key = room_id
         rooms_data[room_key] = {"users": []}
-        save_data("rooms_data.json", rooms_data)  # Save the updated data
+        save_data("rooms_data.json", rooms_data)
         return {"room_id": room_id}
 
 @router.post("/join_room/{room_id}", response_model=Dict[str, str])
 async def join_room(room_id: str, user_details: joinRoomParams, request: Request):
         if room_id in rooms_data:
             rooms_data[room_id]["users"].append({"userId": user_details.user_id, "userName": user_details.user_name})
-            save_data("rooms_data.json", rooms_data)  # Save the updated data
+            save_data("rooms_data.json", rooms_data)  
             current_url = str(request.base_url)
             complete_url = f"{current_url}/join_room/{room_id}"
             return {
