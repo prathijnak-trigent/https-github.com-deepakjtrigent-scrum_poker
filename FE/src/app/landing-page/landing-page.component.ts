@@ -3,7 +3,7 @@ import { WebsocketService } from '../shared/services/websocket.service';
 import { ToastService } from '../shared/services/toast.service';
 import { Router } from '@angular/router';
 import { CreateRoomService } from '../shared/services/create-room.service';
-import { RoomId } from '../shared/model/roomId';
+import { CreateRoomResponse } from '../shared/model/roomId';
 
 @Component({
   selector: 'app-landing-page',
@@ -19,7 +19,7 @@ export class LandingPageComponent {
   ) {}
 
   public createRoom(): void {
-    this.roomservice.createRoom().subscribe((response: RoomId): void => {
+    this.roomservice.createRoom().subscribe((response: CreateRoomResponse): void => {
       const roomId: string = response.room_id;
       this.router.navigate([`/room/${roomId}`]);
     });

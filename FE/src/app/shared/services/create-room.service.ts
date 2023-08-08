@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { RoomId } from '../model/roomId';
+import { CreateRoomResponse } from '../model/roomId';
 import { scrumPokerUrls } from '../url';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { scrumPokerUrls } from '../url';
 export class CreateRoomService {
   constructor(private http: HttpClient) {}
 
-  public createRoom() : Observable<RoomId> {
+  public createRoom() : Observable<CreateRoomResponse> {
     return this.http.post<any>(scrumPokerUrls.createRoomUrl, {});
   }
 }
