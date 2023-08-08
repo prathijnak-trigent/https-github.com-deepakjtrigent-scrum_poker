@@ -11,9 +11,9 @@ export class WebsocketService {
   private readonly socketUrl: string = 'ws://localhost:8000/room';
   public connected: boolean = false;
 
-  constructor(private toast: ToastService,private http:HttpClient) {}
+  constructor(private toast: ToastService, private http: HttpClient) {}
 
-  public connect(roomId : string): void {
+  public connect(roomId: string): void {
     this.socket = new WebSocket(`${this.socketUrl}/${roomId}`);
     this.socket.onopen = (event: Event): void => {
       console.log('WebSocket connection established.');
@@ -31,7 +31,7 @@ export class WebsocketService {
     };
 
     this.socket.onerror = (): void => {
-      this.toast.showToast('Something went Bad')
+      this.toast.showToast('Something went Bad');
       this.connected = false;
     };
   }
@@ -42,12 +42,4 @@ export class WebsocketService {
       this.connected = false;
     }
   }
-  public send(data: {[text: string]: string } | string): void {
-    if (this.socket.readyState === WebSocket.OPEN) {
-      this.socket.send(JSON.stringify(data));
-    } else {
-      console.error('WebSocket is not open. Cannot send data:', data);
-    }
-  }
-
 }

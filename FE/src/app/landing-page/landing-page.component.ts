@@ -15,14 +15,6 @@ export class LandingPageComponent {
     private router:Router
   ) {}
 
-  // public ngOnInit(){
-  //   this.websocketService.connect()
-  // }
-
-  //  sendMessage() {
-  //   const message = { text: 'Hello, WebSocket!' };
-  //   this.websocketService.send(message);
-  // }
 
 
 }
