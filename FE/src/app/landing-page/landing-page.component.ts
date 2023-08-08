@@ -24,12 +24,5 @@ export class LandingPageComponent {
   //   this.websocketService.send(message);
   // }
 
-  public createRoom(): void {
-    this.websocketService.createRoom().subscribe((response): void => {
-      // this.toast.showToast(JSON.stringify(response));
-      const roomId : string = response.room_id
-      this.router.navigate([`/room/${roomId}`])
-    });
-  }
-  
+
 }

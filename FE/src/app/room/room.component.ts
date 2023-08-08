@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { cardCount } from '../shared/app-data/scrum-points-series';
 import { WebsocketService } from '../shared/services/websocket.service';
 import { Router } from '@angular/router';
@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
 })
-export class RoomComponent {
+export class RoomComponent implements OnDestroy{
   public cardCounts: number[] = cardCount;
   public activeIndex: number = -1;
   public roomId!: string | number;
@@ -25,6 +25,10 @@ export class RoomComponent {
   public ngOnInit(): void {
     this.roomId = this.router.url.split('/room/').join('');
     this.websocketService.connect(this.roomId);
+  }
+
+  public ngOnDestroy(): void {
+    this.websocketService.disconnect();
   }
 
   private sendMessage(points: number): void {

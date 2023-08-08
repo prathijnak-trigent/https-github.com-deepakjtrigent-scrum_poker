@@ -36,10 +36,12 @@ export class WebsocketService {
     };
   }
 
-public createRoom():Observable<any>{
-  return this.http.post('http://localhost:8000/create_room', {})
-}
-
+  public disconnect(): void {
+    if (this.socket) {
+      this.socket.close();
+      this.connected = false;
+    }
+  }
   public send(data: {[text: string]: string } | string): void {
     if (this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify(data));
@@ -47,4 +49,5 @@ public createRoom():Observable<any>{
       console.error('WebSocket is not open. Cannot send data:', data);
     }
   }
+
 }
