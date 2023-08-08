@@ -25,7 +25,7 @@ export class RoomComponent implements OnDestroy {
 
   public ngOnInit(): void {
     this.route.params.subscribe((params) => {
-      console.log((this.roomId = params['roomId']));
+      this.roomId = params['roomId'];
       this.websocketService.connect(this.roomId);
     });
   }
