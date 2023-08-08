@@ -16,7 +16,6 @@ export class WebsocketService {
   public connect(roomId: string): void {
     this.socket = new WebSocket(`${this.socketUrl}/${roomId}`);
     this.socket.onopen = (event: Event): void => {
-      console.log('WebSocket connection established.');
       this.connected = true;
     };
 
