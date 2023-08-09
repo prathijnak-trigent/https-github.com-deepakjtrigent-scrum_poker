@@ -24,8 +24,8 @@ export class HeartbeatService {
   }
 
   public startHeartbeat(): void {
-    const heartbeatIntervalTime = 5000;
-    const redirectAfterInactiveTime = 10000;
+    const heartbeatIntervalTime = 10000;
+    const redirectAfterInactiveTime = 60000;
     const sendHeartbeat = () => {
       if (this.isTabActive) {
         console.log('No Action');
