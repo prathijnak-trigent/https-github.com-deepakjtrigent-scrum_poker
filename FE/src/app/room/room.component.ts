@@ -22,11 +22,6 @@ export class RoomComponent implements OnInit,OnDestroy {
     private heartBeat: HeartbeatService
   ) {}
 
-  public toggleActive(index: number): void {
-    this.activeIndex = this.activeIndex === index ? -1 : index;
-    this.heartBeat.resetHeartbeatTimeout();
-  }
-
   public ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.roomId = params['roomId'];
@@ -34,7 +29,15 @@ export class RoomComponent implements OnInit,OnDestroy {
     });
     this.heartBeat.startHeartbeat();
   }
+  
   public ngOnDestroy(): void {
     this.websocketService.disconnect();
   }
+
+  public toggleActive(index: number): void {
+    this.activeIndex = this.activeIndex === index ? -1 : index;
+    this.heartBeat.resetHeartbeatTimeout();
+  }
+
+  
 }
