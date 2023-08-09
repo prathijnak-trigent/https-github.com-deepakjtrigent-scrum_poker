@@ -1,7 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { cardCount } from '../shared/app-data/scrum-points-series';
 import { WebsocketService } from '../shared/services/websocket.service';
-import { Router } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
