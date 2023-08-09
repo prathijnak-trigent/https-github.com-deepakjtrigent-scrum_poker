@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ToastService } from './toast.service';
+import { ToastService, toastState } from './toast.service';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class WebsocketService {
 
     this.socket.onmessage = (event: MessageEvent<string>): void => {
       const message: string = event.data;
-      this.toast.showToast(message);
+      this.toast.showToast(message, toastState.success);
     };
 
     this.socket.onclose = (event: Event): void => {
@@ -30,7 +30,7 @@ export class WebsocketService {
     };
 
     this.socket.onerror = (): void => {
-      this.toast.showToast('Something went Bad');
+      this.toast.showToast('Something went Bad', toastState.danger);
       this.connected = false;
     };
   }
