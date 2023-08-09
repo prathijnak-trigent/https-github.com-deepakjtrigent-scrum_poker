@@ -11,12 +11,14 @@ import {MatSnackBarModule} from '@angular/material/snack-bar';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RoomComponent } from './room/room.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingPageComponent,
-    RoomComponent
+    RoomComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
