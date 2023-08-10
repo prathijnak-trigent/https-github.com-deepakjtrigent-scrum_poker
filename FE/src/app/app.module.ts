@@ -4,20 +4,26 @@ import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import {MatDialogModule} from '@angular/material/dialog';
-import {MatButtonModule} from '@angular/material/button';
-import {MatSnackBarModule} from '@angular/material/snack-bar';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RoomComponent } from './room/room.component';
 import { UserIdInterceptor } from './user-id.interceptor';
+import { UserFormComponent } from './user-form/user-form.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LandingPageComponent,
-    RoomComponent
+    RoomComponent,
+    UserFormComponent,
   ],
   imports: [
     BrowserModule,
@@ -27,7 +33,10 @@ import { UserIdInterceptor } from './user-id.interceptor';
     MatButtonModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    HttpClientModule
+    HttpClientModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
@@ -36,4 +45,4 @@ import { UserIdInterceptor } from './user-id.interceptor';
   },],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {}
