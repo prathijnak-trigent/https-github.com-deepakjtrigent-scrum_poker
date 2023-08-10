@@ -23,7 +23,7 @@ import { UserFormComponent } from './user-form/user-form.component';
     AppComponent,
     LandingPageComponent,
     RoomComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
     UserFormComponent,
   ],
   imports: [
