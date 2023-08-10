@@ -1,5 +1,6 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { cardCount } from '../shared/app-data/scrum-points-series';
+import { HeartbeatService } from '../shared/services/heartbeat.service';
 import { WebsocketService } from '../shared/services/websocket.service';
 import { ActivatedRoute } from '@angular/router';
 import { initFlowbite } from 'flowbite';
@@ -9,7 +10,9 @@ import { initFlowbite } from 'flowbite';
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
 })
-export class RoomComponent implements OnDestroy {
+
+export class RoomComponent implements OnInit,OnDestroy {
+
   public cardCounts: number[] = cardCount;
   public activeIndex: number = -1;
   public roomId!: any;
@@ -67,12 +70,9 @@ export class RoomComponent implements OnDestroy {
 
   constructor(
     private websocketService: WebsocketService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private heartBeat: HeartbeatService
   ) {}
-
-  public toggleActive(index: number): void {
-    this.activeIndex = this.activeIndex === index ? -1 : index;
-  }
 
   public ngOnInit(): void {
     initFlowbite();
@@ -80,9 +80,17 @@ export class RoomComponent implements OnDestroy {
       this.roomId = params['roomId'];
       this.websocketService.connect(this.roomId);
     });
+    this.heartBeat.startHeartbeat();
   }
-
+  
   public ngOnDestroy(): void {
     this.websocketService.disconnect();
   }
+
+  public toggleActive(index: number): void {
+    this.activeIndex = this.activeIndex === index ? -1 : index;
+    this.heartBeat.resetHeartbeatTimeout();
+  }
+
+  
 }
