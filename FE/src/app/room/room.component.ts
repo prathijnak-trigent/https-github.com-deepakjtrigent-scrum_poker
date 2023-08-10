@@ -32,4 +32,5 @@ export class RoomComponent implements OnDestroy {
   public ngOnDestroy(): void {
     this.websocketService.disconnect();
   }
+  
 }
