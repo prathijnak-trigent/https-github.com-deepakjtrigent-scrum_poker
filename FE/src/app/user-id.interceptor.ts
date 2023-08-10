@@ -14,9 +14,9 @@ export class UserIdInterceptor implements HttpInterceptor {
   constructor(private storageService: StorageService) {}
 
   intercept(
-    request: HttpRequest<object>,
+    request: HttpRequest<any>,
     next: HttpHandler
-  ): Observable<HttpEvent<object>> {
+  ): Observable<HttpEvent<any>> {
     const userId = this.storageService.user.userId;
 
     const modifiedRequest = request.clone({
