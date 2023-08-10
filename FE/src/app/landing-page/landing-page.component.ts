@@ -7,7 +7,7 @@ import { toastState } from '../shared/services/toast.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserFormComponent } from '../user-form/user-form.component';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '../shared/model/user';
+import { User, defaultsUser } from '../shared/model/user';
 import { StorageService } from '../shared/services/storage.service';
 import { CookieService } from 'ngx-cookie-service';
 
@@ -17,10 +17,7 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent {
-  public user: User = {
-    userId: '',
-    displayName: '',
-  };
+  public user: User = defaultsUser
 
   constructor(
     private toast: ToastService,
