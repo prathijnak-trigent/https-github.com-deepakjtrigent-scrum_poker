@@ -19,3 +19,9 @@ async def websocket_endpoint(room_id: str, websocket: WebSocket):
         print(f"WebSocket error: {e}")
     finally:
         room_websockets[room_id].remove(websocket)
+
+
+
+
+
+
