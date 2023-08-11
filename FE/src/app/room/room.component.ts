@@ -3,7 +3,6 @@ import { cardCount } from '../shared/app-data/scrum-points-series';
 import { HeartbeatService } from '../shared/services/heartbeat.service';
 import { WebsocketService } from '../shared/services/websocket.service';
 import { ActivatedRoute } from '@angular/router';
-import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-room',
@@ -21,9 +20,36 @@ export class RoomComponent implements OnInit,OnDestroy {
     'Aaren',
     'Aarez',
     'Aarman',
+    'Aaryannnnnnnn',
+    'Aaryn',
+    'Aayan',
+    'Aazaan',
+    'Abaan',
+    'Adain',
+    'Adam',
+    'Adam-James',
+    'Addison',
+    'Addisson',
+    'Adegbola',
+    'Aazaan',
+    'Abaan',
+    'Adain',
+    'Adam',
+    'Adam-James',
+    'Addison',
+    'Addisson',
+    'Adegbola',
     'Aaryan',
     'Aaryn',
     'Aayan',
+    'Aazaan',
+    'Abaan',
+    'Adain',
+    'Adam',
+    'Adam-James',
+    'Addison',
+    'Addisson',
+    'Adegbola',
     'Aazaan',
     'Abaan',
     'Adain',
@@ -43,7 +69,6 @@ export class RoomComponent implements OnInit,OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    initFlowbite();
     this.route.params.subscribe((params) => {
       this.roomId = params['roomId'];
       this.websocketService.connect(this.roomId);

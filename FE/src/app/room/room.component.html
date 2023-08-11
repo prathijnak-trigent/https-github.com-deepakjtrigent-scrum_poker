@@ -1,255 +1,49 @@
 <div
-  class="w-full flex justify-around h-screen flex-col items-center xs:h-auto"
+  class="w-screen flex justify-around h-screen flex-col items-center xxs:h-auto overflow-hidden"
 >
   <div
-    class="w-full h-3/4 xs:h-[400px] sm:h-[900px] overflow-hidden flex flex-col justify-center items-center"
+    class="w-full h-3/4 xxs:h-[550px] xs:h-[700px] overflow-hidden flex flex-col justify-center items-center gap-7 xxs:gap-3 xs:gap-4"
   >
-    <!-- <div class="w-1/2 h-4/6 grid grid-cols-5 gap-14 overflow-hidden p-10">
     <div
-      *ngFor="let userName of usersNameArray"
-      class="text-primary-color font-bold w-[120px] font-sans text-sm flex flex-col justify-between items-center gap-2"
+      class="w-1/2 h-3/5 xxs:w-[250px] xxs:p-0 xxs:h-[330px] xs:w-[380px] xs:h-[450px] sm:w-[600px] md:w-9/12 lg:w-8/12 xxs:grid-cols-3 xs:grid-cols-3 xxs:gap-4 xs:gap-6 grid grid-cols-5 gap-14 justify-items-center overflow-y-auto overflow-x-hidden p-5 xs:p-1"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 40 40"
-        fill="none"
-      >
-        <g clip-path="url(#clip0_501_6285)">
-          <path
-            d="M19.0469 26.5469C18.1953 27.3984 16.8047 27.3984 15.9531 26.5469L10.9531 21.5469C10.1016 20.6953 10.1016 19.3047 10.9531 18.4531C11.8047 17.6016 13.1953 17.6016 14.0469 18.4531L17.5 21.9062L25.9531 13.4531C26.8047 12.6016 28.1953 12.6016 29.0469 13.4531C29.8984 14.3047 29.8984 15.6953 29.0469 16.5469L19.0469 26.5469ZM40 20C40 31.0469 31.0469 40 20 40C8.95312 40 0 31.0469 0 20C0 8.95312 8.95312 0 20 0C31.0469 0 40 8.95312 40 20ZM20 3.75C11.0234 3.75 3.75 11.0234 3.75 20C3.75 28.9766 11.0234 36.25 20 36.25C28.9766 36.25 36.25 28.9766 36.25 20C36.25 11.0234 28.9766 3.75 20 3.75Z"
-            fill="#0064fe"
-          />
-        </g>
-        <defs>
-          <clipPath id="clip0_501_6285">
-            <rect width="40" height="40" fill="white" />
-          </clipPath>
-        </defs>
-      </svg>
-      <p>{{ userName }}</p>
-    </div>
-  </div> -->
-
-    <div id="default-carousel" class="relative w-3/5" data-carousel="static">
-      <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-          <div
-            class="w-full grid grid-cols-5 gap-10 p-16 absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-          >
-            <div
-              *ngFor="let userName of usersNameArray"
-              class="text-primary-color font-bold w-[120px] font-sans text-sm flex flex-col justify-between items-center gap-2"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 40 40"
-                fill="none"
-              >
-                <g clip-path="url(#clip0_501_6285)">
-                  <path
-                    d="M19.0469 26.5469C18.1953 27.3984 16.8047 27.3984 15.9531 26.5469L10.9531 21.5469C10.1016 20.6953 10.1016 19.3047 10.9531 18.4531C11.8047 17.6016 13.1953 17.6016 14.0469 18.4531L17.5 21.9062L25.9531 13.4531C26.8047 12.6016 28.1953 12.6016 29.0469 13.4531C29.8984 14.3047 29.8984 15.6953 29.0469 16.5469L19.0469 26.5469ZM40 20C40 31.0469 31.0469 40 20 40C8.95312 40 0 31.0469 0 20C0 8.95312 8.95312 0 20 0C31.0469 0 40 8.95312 40 20ZM20 3.75C11.0234 3.75 3.75 11.0234 3.75 20C3.75 28.9766 11.0234 36.25 20 36.25C28.9766 36.25 36.25 28.9766 36.25 20C36.25 11.0234 28.9766 3.75 20 3.75Z"
-                    fill="#0064fe"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_501_6285">
-                    <rect width="40" height="40" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              <p>{{ userName }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-          <div
-            class="w-full grid grid-cols-5 gap-10 p-16 absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-          >
-            <div
-              *ngFor="let userName of usersNameArray"
-              class="text-primary-color font-bold w-[120px] font-sans text-sm flex flex-col justify-between items-center gap-2"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 40 40"
-                fill="none"
-              >
-                <g clip-path="url(#clip0_501_6285)">
-                  <path
-                    d="M19.0469 26.5469C18.1953 27.3984 16.8047 27.3984 15.9531 26.5469L10.9531 21.5469C10.1016 20.6953 10.1016 19.3047 10.9531 18.4531C11.8047 17.6016 13.1953 17.6016 14.0469 18.4531L17.5 21.9062L25.9531 13.4531C26.8047 12.6016 28.1953 12.6016 29.0469 13.4531C29.8984 14.3047 29.8984 15.6953 29.0469 16.5469L19.0469 26.5469ZM40 20C40 31.0469 31.0469 40 20 40C8.95312 40 0 31.0469 0 20C0 8.95312 8.95312 0 20 0C31.0469 0 40 8.95312 40 20ZM20 3.75C11.0234 3.75 3.75 11.0234 3.75 20C3.75 28.9766 11.0234 36.25 20 36.25C28.9766 36.25 36.25 28.9766 36.25 20C36.25 11.0234 28.9766 3.75 20 3.75Z"
-                    fill="#0064fe"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_501_6285">
-                    <rect width="40" height="40" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              <p>{{ userName }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-          <div
-            class="w-full grid grid-cols-5 gap-10 p-16 absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-          >
-            <div
-              *ngFor="let userName of usersNameArray"
-              class="text-primary-color font-bold w-[120px] font-sans text-sm flex flex-col justify-between items-center gap-2"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 40 40"
-                fill="none"
-              >
-                <g clip-path="url(#clip0_501_6285)">
-                  <path
-                    d="M19.0469 26.5469C18.1953 27.3984 16.8047 27.3984 15.9531 26.5469L10.9531 21.5469C10.1016 20.6953 10.1016 19.3047 10.9531 18.4531C11.8047 17.6016 13.1953 17.6016 14.0469 18.4531L17.5 21.9062L25.9531 13.4531C26.8047 12.6016 28.1953 12.6016 29.0469 13.4531C29.8984 14.3047 29.8984 15.6953 29.0469 16.5469L19.0469 26.5469ZM40 20C40 31.0469 31.0469 40 20 40C8.95312 40 0 31.0469 0 20C0 8.95312 8.95312 0 20 0C31.0469 0 40 8.95312 40 20ZM20 3.75C11.0234 3.75 3.75 11.0234 3.75 20C3.75 28.9766 11.0234 36.25 20 36.25C28.9766 36.25 36.25 28.9766 36.25 20C36.25 11.0234 28.9766 3.75 20 3.75Z"
-                    fill="#0064fe"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_501_6285">
-                    <rect width="40" height="40" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              <p>{{ userName }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="hidden duration-700 ease-in-out" data-carousel-item>
-          <div
-            class="w-full grid grid-cols-5 gap-10 p-16 absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-          >
-            <div
-              *ngFor="let userName of usersNameArray"
-              class="text-primary-color font-bold w-[120px] font-sans text-sm flex flex-col justify-between items-center gap-2"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 40 40"
-                fill="none"
-              >
-                <g clip-path="url(#clip0_501_6285)">
-                  <path
-                    d="M19.0469 26.5469C18.1953 27.3984 16.8047 27.3984 15.9531 26.5469L10.9531 21.5469C10.1016 20.6953 10.1016 19.3047 10.9531 18.4531C11.8047 17.6016 13.1953 17.6016 14.0469 18.4531L17.5 21.9062L25.9531 13.4531C26.8047 12.6016 28.1953 12.6016 29.0469 13.4531C29.8984 14.3047 29.8984 15.6953 29.0469 16.5469L19.0469 26.5469ZM40 20C40 31.0469 31.0469 40 20 40C8.95312 40 0 31.0469 0 20C0 8.95312 8.95312 0 20 0C31.0469 0 40 8.95312 40 20ZM20 3.75C11.0234 3.75 3.75 11.0234 3.75 20C3.75 28.9766 11.0234 36.25 20 36.25C28.9766 36.25 36.25 28.9766 36.25 20C36.25 11.0234 28.9766 3.75 20 3.75Z"
-                    fill="#0064fe"
-                  />
-                </g>
-                <defs>
-                  <clipPath id="clip0_501_6285">
-                    <rect width="40" height="40" fill="white" />
-                  </clipPath>
-                </defs>
-              </svg>
-              <p>{{ userName }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
       <div
-        class="absolute z-30 flex space-x-3 -translate-x-1/2 bottom-5 left-1/2"
+        *ngFor="let userName of usersNameArray"
+        class="text-primary-color font-bold w-[120px] xxs:w-[70px] xs:w-[90px] font-sans text-sm flex flex-col justify-center items-center gap-2"
       >
-        <button
-          type="button"
-          class="w-3 h-3 rounded-full bg-slate-400"
-          aria-current="true"
-          aria-label="Slide 1"
-          data-carousel-slide-to="0"
-        ></button>
-        <button
-          type="button"
-          class="w-3 h-3 rounded-full bg-slate-400"
-          aria-current="true"
-          aria-label="Slide 2"
-          data-carousel-slide-to="1"
-        ></button>
-        <button
-          type="button"
-          class="w-3 h-3 rounded-full bg-slate-400"
-          aria-current="true"
-          aria-label="Slide 3"
-          data-carousel-slide-to="2"
-        ></button>
-        <button
-          type="button"
-          class="w-3 h-3 rounded-full bg-slate-400"
-          aria-current="true"
-          aria-label="Slide 4"
-          data-carousel-slide-to="3"
-        ></button>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 40 40"
+          fill="none"
+        >
+          <g clip-path="url(#clip0_501_6285)">
+            <path
+              d="M19.0469 26.5469C18.1953 27.3984 16.8047 27.3984 15.9531 26.5469L10.9531 21.5469C10.1016 20.6953 10.1016 19.3047 10.9531 18.4531C11.8047 17.6016 13.1953 17.6016 14.0469 18.4531L17.5 21.9062L25.9531 13.4531C26.8047 12.6016 28.1953 12.6016 29.0469 13.4531C29.8984 14.3047 29.8984 15.6953 29.0469 16.5469L19.0469 26.5469ZM40 20C40 31.0469 31.0469 40 20 40C8.95312 40 0 31.0469 0 20C0 8.95312 8.95312 0 20 0C31.0469 0 40 8.95312 40 20ZM20 3.75C11.0234 3.75 3.75 11.0234 3.75 20C3.75 28.9766 11.0234 36.25 20 36.25C28.9766 36.25 36.25 28.9766 36.25 20C36.25 11.0234 28.9766 3.75 20 3.75Z"
+              fill="#0064fe"
+            />
+          </g>
+          <defs>
+            <clipPath id="clip0_501_6285">
+              <rect width="40" height="40" fill="white" />
+            </clipPath>
+          </defs>
+        </svg>
+        <p>
+          {{ userName.length < 7 ? userName : userName.slice(0, 4)
+          }}<span *ngIf="userName.length > 7">...</span>
+        </p>
       </div>
-      <button
-        type="button"
-        class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-        data-carousel-prev
-      >
-        <span
-          class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-500/30 dark:bg-gray-800/30 group-hover:bg-slate-800/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none"
-        >
-          <svg
-            class="w-4 h-4 text-white dark:text-gray-800"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 6 10"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M5 1 1 5l4 4"
-            />
-          </svg>
-          <span class="sr-only">Previous</span>
-        </span>
-      </button>
-      <button
-        type="button"
-        class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-        data-carousel-next
-      >
-        <span
-          class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-500/30 dark:bg-gray-800/30 group-hover:bg-slate-800/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none"
-        >
-          <svg
-            class="w-4 h-4 text-white dark:text-gray-800"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 6 10"
-          >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 9 4-4-4-4"
-            />
-          </svg>
-          <span class="sr-only">Next</span>
-        </span>
-      </button>
     </div>
 
-    <button mat-raised-button class="mt-12 xs:mt-10 sm:mt-14 md:mt-0">Reveal</button>
+    <button mat-raised-button class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10">
+      Reveal
+    </button>
   </div>
 
-  <ng-template
-    class="flex flex-row flex-wrap justify-center items-center gap-3 mx-3 my-2 text-justify xs:w-[260px] sm: w-[334px] md:w-auto"
+  <div
+    class="flex flex-row flex-wrap justify-center items-center gap-3 mx-3 my-2 text-justify xxs:w-[260px] sm: w-[334px] md:w-auto"
   >
     <ng-container *ngFor="let points of cardCounts; let index = index">
       <button
@@ -261,13 +55,15 @@
         {{ points }}
       </button>
     </ng-container>
-  </ng-template>
+  </div>
 
-  <div
+  <ng-template
     class="flex justify-center items-center flex-row gap-6 font-card-font mx-3 my-4"
   >
     <ng-container *ngFor="let points of selectedPoints; let index = index">
-      <div class="flex flex-row justify-center items-center gap-2">
+      <div
+        class="flex flex-row justify-center items-center gap-2 xxs:hidden xs:hidden"
+      >
         <button
           class="w-[56px] h-[84px] rounded-md bg-white text-gray-800 font-semibold py-2 px-4 border border-gray-800 shadow-md transition"
         >
@@ -333,14 +129,16 @@
         </defs>
       </svg>
       <div
-        class="py-4 px-6 outline-none bg-primary-color text-xl leading-6 rounded-[28px] shadow shadow-slate-500/50"
+        class="py-3 px-6 outline-none bg-primary-color text-xl leading-6 rounded-[28px] shadow shadow-slate-500/50"
       >
         3.3
       </div>
     </div>
-  </div>
+  </ng-template>
 </div>
 
 <ng-template #restart>
-  <button class="mt-12 xs:mt-10 sm:mt-14 md:mt-0" mat-raised-button>Restart</button></ng-template
+  <button class="mt-12 xxs:mt-10 sm:mt-14 md:mt-0" mat-raised-button>
+    Restart
+  </button></ng-template
 >

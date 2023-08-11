@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./src/**/*.{html,ts}", "./node_modules/flowbite/**/*.js"],
+  content: ["./src/**/*.{html,ts}"],
   theme: {
     extend: {
       colors: {
@@ -30,15 +30,14 @@ module.exports = {
         },
       },
       screens: {
-        'xs': { 'raw': '(max-width: 355px)' },
-
+        'xs': { 'raw': "(min-width: 376px)", 'raw': "(max-width:639px)" },
+        'xxs': { 'raw': "(max-width: 375px)" },
       },
-      fontFamily:{
-        'card-points': ['Roboto Mono'],
-        'card-font': ['Space Mono'],
-        
-      }
+      fontFamily: {
+        "card-points": ["Roboto Mono"],
+        "card-font": ["Space Mono"],
+      },
     },
   },
-  plugins: [require("flowbite/plugin")],
+  plugins: [],
 };
