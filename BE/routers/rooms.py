@@ -13,8 +13,9 @@ rooms_data: Dict[str, Dict[str, List[Dict[str, str]]]] = load_data("rooms_data.j
 room_timers: Dict[str, asyncio.TimerHandle] = {}
 
 class joinRoomParams(BaseModel):
-    user_id: str
-    user_name: str
+    userId: str
+    userName: str
+
 
 @router.post("/create_room", response_model=Dict[str, str])
 async def create_room():
@@ -35,7 +36,7 @@ async def room_action(room_id: str, user_details: joinRoomParams, request: Reque
         rooms_data[room_id]["users"].append({"userId": user_details.user_id, "userName": user_details.user_name})
         
     save_data("rooms_data.json", rooms_data)
-    
+ 
     if not rooms_data[room_id]["users"]:
         async def discard_room():
             await asyncio.sleep(60)
@@ -79,3 +80,12 @@ asyncio.create_task(remove_inactive_rooms_periodically())
 async def get_active_rooms():
     active_rooms = [room_id for room_id in rooms_data if rooms_data[room_id]["users"]]
     return active_rooms
+
+@router.put("/room/{room_id}/update")
+async def update_room_data(room_id: str, data: dict):
+    if room_id in rooms_data and room_id in room_websockets:
+            for websocket in room_websockets[room_id]: 
+                await websocket.send_json(data)
+            return {"response": data}
+    else:
+        raise HTTPException(status_code=404, detail="Room not found")
