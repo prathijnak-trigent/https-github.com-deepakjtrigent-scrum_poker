@@ -15,6 +15,8 @@ export class RoomComponent implements OnInit,OnDestroy {
   public cardCounts: number[] = cardCount;
   public activeIndex: number = -1;
   public roomId!: any;
+
+  // will be removed when api is used
   public usersNameArray = [
     'Aaran',
     'Aaren',
@@ -59,7 +61,8 @@ export class RoomComponent implements OnInit,OnDestroy {
     'Addisson',
     'Adegbola',
   ];
-
+ 
+  // wiil be removed when gets data from backend
   public selectedPoints = [1,2,3]
 
   constructor(
