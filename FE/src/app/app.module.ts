@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RoomComponent } from './room/room.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UserIdInterceptor } from './user-id.interceptor';
 import { UserFormComponent } from './user-form/user-form.component';
 
@@ -23,6 +24,7 @@ import { UserFormComponent } from './user-form/user-form.component';
     AppComponent,
     LandingPageComponent,
     RoomComponent,
+    PageNotFoundComponent,
     UserFormComponent,
   ],
   imports: [

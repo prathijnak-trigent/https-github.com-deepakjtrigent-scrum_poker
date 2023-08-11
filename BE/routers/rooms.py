@@ -35,7 +35,7 @@ async def room_action(room_id: str, user_details: joinRoomParams, request: Reque
         rooms_data[room_id]["users"].append({"userId": user_details.user_id, "userName": user_details.user_name})
         
     save_data("rooms_data.json", rooms_data)
-    
+ 
     if not rooms_data[room_id]["users"]:
         async def discard_room():
             await asyncio.sleep(60)
