@@ -13,8 +13,9 @@ rooms_data: Dict[str, Dict[str, List[Dict[str, str]]]] = load_data("rooms_data.j
 room_timers: Dict[str, asyncio.TimerHandle] = {}
 
 class joinRoomParams(BaseModel):
-    user_id: str
-    user_name: str
+    userId: str
+    userName: str
+
 
 @router.post("/create_room", response_model=Dict[str, str])
 async def create_room():
