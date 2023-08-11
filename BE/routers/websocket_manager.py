@@ -18,4 +18,10 @@ async def websocket_endpoint(room_id: str, websocket: WebSocket):
                 if web != websocket:
                     await web['websocket'].send_text(data)
     except Exception as e:
-        print(f"WebSocket error: {e}")
+        return e
+
+
+
+
+
+
