@@ -22,14 +22,14 @@ export class LandingPageComponent {
   constructor(
     private toast: ToastService,
     private router: Router,
-    private roomservice: CreateRoomService,
+    private createRoomService: CreateRoomService,
     private cookieService: CookieService,
     public userDialog: MatDialog,
     private storageService: StorageService
   ) {}
 
   public createRoom(): void {
-    this.roomservice.createRoom().subscribe(
+    this.createRoomService.createRoom().subscribe(
       (response: CreateRoomResponse): void => {
         const roomId: string = response.room_id;
         this.router.navigate([`/room/${roomId}`]);

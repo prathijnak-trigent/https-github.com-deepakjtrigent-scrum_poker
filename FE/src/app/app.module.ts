@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
+import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -15,6 +15,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RoomComponent } from './room/room.component';
+import { UserIdInterceptor } from './user-id.interceptor';
 import { UserFormComponent } from './user-form/user-form.component';
 
 @NgModule({
@@ -37,7 +38,11 @@ import { UserFormComponent } from './user-form/user-form.component';
     MatInputModule,
     ReactiveFormsModule,
   ],
-  providers: [],
-  bootstrap: [AppComponent],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: UserIdInterceptor,
+    multi: true,
+  },],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}
