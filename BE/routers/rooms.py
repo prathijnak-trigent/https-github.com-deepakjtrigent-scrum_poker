@@ -79,3 +79,12 @@ asyncio.create_task(remove_inactive_rooms_periodically())
 async def get_active_rooms():
     active_rooms = [room_id for room_id in rooms_data if rooms_data[room_id]["users"]]
     return active_rooms
+
+@router.put("/room/{room_id}/update")
+async def update_room_data(room_id: str, data: dict):
+    if room_id in rooms_data and room_id in room_websockets:
+            for websocket in room_websockets[room_id]: 
+                await websocket.send_json(data)
+            return {"response": data}
+    else:
+        raise HTTPException(status_code=404, detail="Room not found")
