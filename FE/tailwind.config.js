@@ -30,7 +30,12 @@ module.exports = {
         },
       },
       screens: {
-     
+        'xs': { 'raw': "(min-width: 376px)", 'raw': "(max-width:639px)" },
+        'xxs': { 'raw': "(max-width: 375px)" },
+      },
+      fontFamily: {
+        "card-points": ["Roboto Mono"],
+        "card-font": ["Space Mono"],
       },
     },
   },
