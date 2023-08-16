@@ -9,11 +9,11 @@ export class StorageService {
   public user!: User;
 
   constructor(private cookieService: CookieService) {}
-
   public storeUserInCookies(userDetails: User): void {
     const encodedUser: string = btoa(JSON.stringify(userDetails));
     this.cookieService.set('userDetails', encodedUser, {
       expires: 365,
+      path: "/"
     });
   }
 

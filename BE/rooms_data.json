@@ -1,1 +1,44 @@
-{}
+{
+    "e21b191f-54d2-4df9-922c-c846fb8d40db": {
+        "users": [
+            {
+                "userId": "c9fa613f-181c-41a8-83c7-3c9cbd3971b0",
+                "display_name": "mnbv",
+                "is_admin": true,
+                "is_active": true
+            },
+            {
+                "userId": "c9fa613f-181c-41a8-83c7-3c9cbd3971b0",
+                "display_name": "mnbv",
+                "is_admin": true,
+                "is_active": true
+            }
+        ]
+    },
+    "4794e2e0-6a9d-4dfa-aa5a-87d5f0fb8244": {
+        "users": [
+            {
+                "userId": "c9fa613f-181c-41a8-83c7-3c9cbd3971b0",
+                "display_name": "mnbv",
+                "is_admin": true,
+                "is_active": true
+            },
+            {
+                "userId": "2e13924e-3e95-45c7-bae2-7b2187afacce",
+                "display_name": "bvcf",
+                "is_admin": false,
+                "is_active": true
+            }
+        ]
+    },
+    "b9e9cf1c-49b1-4213-a8fa-dabe68b5bc24": {
+        "users": [
+            {
+                "userId": "2e13924e-3e95-45c7-bae2-7b2187afacce",
+                "display_name": "bvcf",
+                "is_admin": true,
+                "is_active": true
+            }
+        ]
+    }
+}
