@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ToastService } from '../shared/services/toast.service';
 import { Router } from '@angular/router';
-import { CreateRoomService } from '../shared/services/create-room.service';
+import { RoomService } from '../shared/services/room.service';
 import { CreateRoomResponse } from '../shared/model/roomId';
 import { toastState } from '../shared/services/toast.service';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -22,14 +22,14 @@ export class LandingPageComponent {
   constructor(
     private toast: ToastService,
     private router: Router,
-    private createRoomService: CreateRoomService,
+    private roomService: RoomService,
     private cookieService: CookieService,
     public userDialog: MatDialog,
     private storageService: StorageService
   ) {}
 
   public createRoom(): void {
-    this.createRoomService.createRoom().subscribe(
+    this.roomService.createRoom().subscribe(
       (response: CreateRoomResponse): void => {
         const roomId: string = response.room_id;
         this.router.navigate([`/room/${roomId}`]);

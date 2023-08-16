@@ -21,6 +21,7 @@ export class WebsocketService {
 
     this.socket.onmessage = (event: MessageEvent<string>): void => {
       const message: string = event.data;
+      console.log(message)
       this.toast.showToast(message, toastState.success);
     };
 

@@ -11,7 +11,7 @@ export class UserFormComponent {
   public displayName: FormControl = new FormControl('', [
     Validators.required,
     Validators.minLength(3),
-    Validators.maxLength(15),
+    Validators.maxLength(30),
   ]);
 
   constructor(public dialogRef: MatDialogRef<UserFormComponent>) {}
