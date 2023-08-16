@@ -25,6 +25,55 @@ export class RoomComponent implements OnInit, OnDestroy {
   public user: User = defaultsUser;
 
 
+  // will be removed when api is used
+  public usersNameArray = [
+    'Aaran',
+    'Aaren',
+    'Aarez',
+    'Aarman',
+    'Aaryannnnnnnn',
+    'Aaryn',
+    'Aayan',
+    'Aazaan',
+    'Abaan',
+    'Adain',
+    'Adam',
+    'Adam-James',
+    'Addison',
+    'Addisson',
+    'Adegbola',
+    'Aazaan',
+    'Abaan',
+    'Adain',
+    'Adam',
+    'Adam-James',
+    'Addison',
+    'Addisson',
+    'Adegbola',
+    'Aaryan',
+    'Aaryn',
+    'Aayan',
+    'Aazaan',
+    'Abaan',
+    'Adain',
+    'Adam',
+    'Adam-James',
+    'Addison',
+    'Addisson',
+    'Adegbola',
+    'Aazaan',
+    'Abaan',
+    'Adain',
+    'Adam',
+    'Adam-James',
+    'Addison',
+    'Addisson',
+    'Adegbola',
+  ];
+ 
+  // wiil be removed when gets data from backend
+  public selectedPoints = [1,2,3]
+
   constructor(
     private websocketService: WebsocketService,
     private route: ActivatedRoute,

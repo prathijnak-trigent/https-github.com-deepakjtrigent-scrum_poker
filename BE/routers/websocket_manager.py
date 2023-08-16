@@ -8,7 +8,6 @@ room_websockets = {}
 @router.websocket("/room/{room_id}")
 async def websocket_endpoint(room_id: str, websocket: WebSocket):
     await websocket.accept()
-
     if room_id not in room_websockets:
         room_websockets[room_id] = []
     room_websockets[room_id].append({"websocket": websocket, "user_id": None})
