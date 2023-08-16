@@ -41,8 +41,8 @@ export class LandingPageComponent {
   }
 
   public openUserDialog(): void {
-    const checkUserInCookies = this.cookieService.get('userDetails');
-    if (!checkUserInCookies) {
+    const userInCookies = atob(this.cookieService.get('userDetails'));
+    if (!userInCookies) {
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
           width: '400px',
