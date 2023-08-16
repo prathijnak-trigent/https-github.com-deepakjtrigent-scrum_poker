@@ -89,9 +89,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params) => {
       this.roomId = params['roomId'];
     });
-    this.websocketService.connect(this.roomId);
+   
     this.openUserDialog();
-    this.heartBeat.startHeartbeat()
   }
 
   public ngOnDestroy(): void {
@@ -99,9 +98,11 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   public joinRoom(userDetails: User): void {
-    this.roomService.JoinRoom(this.roomId, userDetails).subscribe(
+    this.roomService.joinRoom(this.roomId, userDetails).subscribe(
         (response) => {
-            this.router.navigate([`room/${this.roomId}`]);
+            // this.router.navigate([`room/${this.roomId}`]);
+            this.websocketService.connect(this.roomId);
+            this.heartBeat.startHeartbeat()
         },
         (error) => {
             this.router.navigate(["Oops"]);

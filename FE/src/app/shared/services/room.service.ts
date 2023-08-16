@@ -16,7 +16,7 @@ export class RoomService {
     return this.http.post<any>(scrumPokerUrls.createRoomUrl, {});
   }
 
- public JoinRoom(roomId: string,user_details:User): Observable<User> {
+ public joinRoom(roomId: string,user_details:User): Observable<User> {
  return this.http.post<any>(`${scrumPokerUrls.roomUrls}/${roomId}/join`,user_details)
  }
 
