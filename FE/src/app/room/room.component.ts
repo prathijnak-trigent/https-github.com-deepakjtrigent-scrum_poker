@@ -12,65 +12,19 @@ import { CookieService } from 'ngx-cookie-service';
 import { User, defaultsUser } from '../shared/model/user';
 import { StorageService } from '../shared/services/storage.service';
 import { v4 as uuidv4 } from 'uuid';
+import { ToastService, toastState } from '../shared/services/toast.service';
 
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
 })
-
 export class RoomComponent implements OnInit, OnDestroy {
   public cardCounts: number[] = cardCount;
   public activeIndex: number = -1;
   public roomId!: any;
   public user: User = defaultsUser;
-
-  // will be removed when api is used
-  public usersNameArray = [
-    'Aaran',
-    'Aaren',
-    'Aarez',
-    'Aarman',
-    'Aaryan Guada Nima',
-    'Aaryannnnnnnn',
-    'Aaryn',
-    'Aayan',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-    'Aaryan',
-    'Aaryn',
-    'Aayan',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-  ];
+  public usersArray: UserData[] = [];
 
   // wiil be removed when gets data from backend
   public selectedPoints = [1, 2, 3];
@@ -83,15 +37,33 @@ export class RoomComponent implements OnInit, OnDestroy {
     private router: Router,
     private cookieService: CookieService,
     private userDialog: MatDialog,
-    private storageService: StorageService
+    private storageService: StorageService,
+    private toast: ToastService
   ) {}
 
   public ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.roomId = params['roomId'];
     });
-   
+
     this.openUserDialog();
+    this.websocketService.recievedMessage.subscribe((message: string): void => {
+      if (message) {
+        const userData: UserAction = JSON.parse(message);
+        if (userData.actionType === 'ACTIVE_USERS_LIST') {
+          for (const user_id in userData.userData) {
+            this.usersArray.push(userData.userData[user_id]);
+          }
+        } else if (userData.actionType === 'NEW_USER_JOINED') {
+          this.usersArray.push(Object.values(userData.userData)[0]);
+        } else if (userData.actionType === 'USER_LEFT') {
+          this.usersArray = this.usersArray.filter(
+            (user: UserData) =>
+              user.userId != Object.values(userData.userData)[0].userId
+          );
+        }
+      }
+    });
   }
 
   public ngOnDestroy(): void {
@@ -100,16 +72,17 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public joinRoom(userDetails: User): void {
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
-        (response) => {
-            // this.router.navigate([`room/${this.roomId}`]);
-            this.websocketService.connect(this.roomId);
-            this.heartBeat.startHeartbeat()
-        },
-        (error) => {
-            this.router.navigate(["Oops"]);
-        }
+      (response) => {
+        // this.router.navigate([`room/${this.roomId}`]);
+        this.websocketService.connect(this.roomId);
+        this.heartBeat.startHeartbeat();
+      },
+      (error) => {
+        this.router.navigate(['Oops']);
+        this.toast.showToast(error.error.error, toastState.danger)
+      }
     );
-}
+  }
 
   public toggleActive(index: number): void {
     this.activeIndex = this.activeIndex === index ? -1 : index;

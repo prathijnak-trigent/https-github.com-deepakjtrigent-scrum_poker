@@ -14,6 +14,7 @@ module.exports = {
       },
       animation: {
         "card-animation": "card 0.4s",
+        "popin-animation" : "popin 0.3s",
       },
       keyframes: {
         card: {
@@ -26,6 +27,14 @@ module.exports = {
             transform: "translateY(0%)",
             opacity: "100",
             backgroundColor: "#0f83f8",
+          },
+        },
+        popin: {
+          "0%": {
+            transform: "scale(0)",
+          },
+          "100%": {
+            transform: "scale(1)",
           },
         },
       },

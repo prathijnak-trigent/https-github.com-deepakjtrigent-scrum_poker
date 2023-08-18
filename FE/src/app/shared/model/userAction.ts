@@ -1,8 +1,7 @@
-import { User } from './user'; 
+import { User } from './user';
 
-export interface UserData {
-  user: User;
-  isAdmin? : boolean;
+export interface UserData extends User {
+  isAdmin?: boolean;
   isActive?: boolean;
   data?: {
     storyPoint: number;
@@ -11,5 +10,5 @@ export interface UserData {
 
 export interface UserAction {
   actionType: string;
-  userData: UserData;
+  userData: {[userid: string]: UserData};
 }
