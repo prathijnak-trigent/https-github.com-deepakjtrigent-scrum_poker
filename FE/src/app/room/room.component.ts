@@ -3,6 +3,7 @@ import { cardCount } from '../shared/app-data/scrum-points-series';
 import { HeartbeatService } from '../shared/services/heartbeat.service';
 import { WebsocketService } from '../shared/services/websocket.service';
 import { ActivatedRoute } from '@angular/router';
+import { UserAction, UserData } from '../shared/model/userAction';
 import { RoomService } from '../shared/services/room.service';
 import { Router } from '@angular/router';
 import { UserFormComponent } from '../user-form/user-form.component';
@@ -13,68 +14,20 @@ import { StorageService } from '../shared/services/storage.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastService, toastState } from '../shared/services/toast.service';
 
-
 @Component({
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
 })
-
 export class RoomComponent implements OnInit, OnDestroy {
   public cardCounts: number[] = cardCount;
   public activeIndex: number = -1;
   public roomId!: any;
   public user: User = defaultsUser;
+  public usersArray: UserData[] = [];
 
-
-  // will be removed when api is used
-  public usersNameArray = [
-    'Aaran',
-    'Aaren',
-    'Aarez',
-    'Aarman',
-    'Aaryannnnnnnn',
-    'Aaryn',
-    'Aayan',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-    'Aaryan',
-    'Aaryn',
-    'Aayan',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-    'Aazaan',
-    'Abaan',
-    'Adain',
-    'Adam',
-    'Adam-James',
-    'Addison',
-    'Addisson',
-    'Adegbola',
-  ];
- 
   // wiil be removed when gets data from backend
-  public selectedPoints = [1,2,3]
+  public selectedPoints = [1, 2, 3];
 
   constructor(
     private websocketService: WebsocketService,
@@ -86,13 +39,30 @@ export class RoomComponent implements OnInit, OnDestroy {
     private userDialog: MatDialog,
     private storageService: StorageService,
     private toast: ToastService
-  ) {
-    
-  }
+  ) {}
 
   public ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.roomId = params['roomId'];
+    });
+
+    this.openUserDialog();
+    this.websocketService.recievedMessage.subscribe((message: string): void => {
+      if (message) {
+        const userData: UserAction = JSON.parse(message);
+        if (userData.actionType === 'ACTIVE_USERS_LIST') {
+          for (const user_id in userData.userData) {
+            this.usersArray.push(userData.userData[user_id]);
+          }
+        } else if (userData.actionType === 'NEW_USER_JOINED') {
+          this.usersArray.push(Object.values(userData.userData)[0]);
+        } else if (userData.actionType === 'USER_LEFT') {
+          this.usersArray = this.usersArray.filter(
+            (user: UserData) =>
+              user.userId != Object.values(userData.userData)[0].userId
+          );
+        }
+      }
     });
    
     this.openUserDialog();
@@ -115,9 +85,10 @@ export class RoomComponent implements OnInit, OnDestroy {
     );
 }
 
+
   public toggleActive(index: number): void {
     this.activeIndex = this.activeIndex === index ? -1 : index;
-   this.heartBeat.resetHeartbeatTimeout(this.roomId);
+    this.heartBeat.resetHeartbeatTimeout();
   }
 
   public openUserDialog(): void {
@@ -139,8 +110,4 @@ export class RoomComponent implements OnInit, OnDestroy {
       });
     } else this.joinRoom(JSON.parse(userInCookies));
   }
-
- public sendRoomId():string{
-  return this.roomId
- }
 }

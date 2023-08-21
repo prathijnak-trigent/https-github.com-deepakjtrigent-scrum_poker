@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Request
+import asyncio
+from fastapi import APIRouter, HTTPException, Header, Request
 from fastapi.responses import JSONResponse
 from typing import Dict
 import uuid
@@ -26,9 +27,6 @@ class User_details(BaseModel):
     isAdmin: bool
     isActive: bool
 
-class joinRoomParams(BaseModel):
-    user_id: str
-    user_name: str
 
 @router.post("/create_room", response_model=Dict[str, str])
 async def create_room(request: Request):

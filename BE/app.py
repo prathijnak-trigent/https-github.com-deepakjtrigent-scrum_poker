@@ -29,3 +29,4 @@ app.add_middleware(
 app.include_router(websocket_router)
 app.include_router(heartbeat)
 app.include_router(rooms_router)
+

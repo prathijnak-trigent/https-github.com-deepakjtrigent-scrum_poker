@@ -6,6 +6,7 @@ from pydantic import BaseModel
 from routers.data_manager import load_data, delete_data
 
 router = APIRouter()
+
 room_websockets = {}
 
 
