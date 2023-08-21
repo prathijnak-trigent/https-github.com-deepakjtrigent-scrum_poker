@@ -14,6 +14,7 @@ module.exports = {
       },
       animation: {
         "card-animation": "card 0.4s",
+        "popin-animation" : "popin 0.3s",
       },
       keyframes: {
         card: {
@@ -28,9 +29,22 @@ module.exports = {
             backgroundColor: "#0f83f8",
           },
         },
+        popin: {
+          "0%": {
+            transform: "scale(0)",
+          },
+          "100%": {
+            transform: "scale(1)",
+          },
+        },
       },
       screens: {
-     
+        'xs': { 'raw': "(min-width: 375px)", 'raw': "(max-width:639px)" },
+        'xxs': { 'raw': "(max-width: 376px)" },
+      },
+      fontFamily: {
+        "card-points": ["Roboto Mono"],
+        "card-font": ["Space Mono"],
       },
     },
   },

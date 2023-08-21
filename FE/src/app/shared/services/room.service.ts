@@ -10,7 +10,6 @@ import { UserAction } from '../model/userAction';
   providedIn: 'root',
 })
 export class RoomService {
-  private apiUrl = "http://localhost:8000/"
   constructor(private http: HttpClient ) {}
 
   public createRoom() : Observable<CreateRoomResponse> {
