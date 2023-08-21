@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ToastService, toastState } from './toast.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -8,7 +9,7 @@ export class WebsocketService {
   private socket!: WebSocket;
   private readonly socketUrl: string = 'ws://localhost:8000/room';
   public connected: boolean = false;
-
+  public recievedMessage: BehaviorSubject<any> = new BehaviorSubject('');
   constructor(private toast: ToastService) {}
 
   public connect(roomId: string): void {
@@ -19,6 +20,7 @@ export class WebsocketService {
 
     this.socket.onmessage = (event: MessageEvent<string>): void => {
       const message: string = event.data;
+      this.recievedMessage.next(message);
       this.toast.showToast(message, toastState.success);
     };
 
@@ -28,9 +30,13 @@ export class WebsocketService {
     };
 
     this.socket.onerror = (): void => {
-      this.toast.showToast('Something went Bad', toastState.danger );
+      this.toast.showToast('Something went Bad', toastState.danger);
       this.connected = false;
     };
+  }
+
+  public sendMessage(data: any): void {
+    this.socket.send(data);
   }
 
   public disconnect(): void {
