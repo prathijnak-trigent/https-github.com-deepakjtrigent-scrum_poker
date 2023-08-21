@@ -2,6 +2,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers.rooms import router as rooms_router
+from routers.heartbeat import router as heartbeat
 from routers.websocket_manager import router as websocket_router
 
 # Define the URLs you want to accept cross-origin requests from.
@@ -26,5 +27,5 @@ app.add_middleware(
 
 # Include the WebSocket router
 app.include_router(websocket_router)
-
+app.include_router(heartbeat)
 app.include_router(rooms_router)
