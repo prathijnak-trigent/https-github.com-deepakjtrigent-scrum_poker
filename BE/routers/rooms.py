@@ -6,27 +6,11 @@ import uuid
 from pydantic import BaseModel
 from routers.data_manager import save_or_update_data, load_data
 from routers.websocket_manager import room_websockets
+from routers.models import User
 
 router = APIRouter()
 
-# rooms_data: Dict[str, Dict[str, List[Dict[str, str]]]
-#                  ] = load_data("rooms_data.json")
-
-# rooms_data = load_data("rooms_data.json")
-# print(rooms_data)
 admin_user_id: str = ""
-
-
-class User(BaseModel):
-    userId: str
-    displayName: str
-
-
-class User_details(BaseModel):
-    User
-    isAdmin: bool
-    isActive: bool
-
 
 @router.post("/create_room", response_model=Dict[str, str])
 async def create_room(request: Request):
