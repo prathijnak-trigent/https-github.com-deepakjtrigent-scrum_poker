@@ -3,40 +3,17 @@ from fastapi import APIRouter, HTTPException, Header, Request
 from fastapi.responses import JSONResponse
 from typing import Dict
 import uuid
-from pydantic import BaseModel
 from routers.data_manager import save_or_update_data, load_data
 from routers.websocket_manager import room_websockets
 import json
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
+from routers.models import User, User_action, User_details
 
 router = APIRouter()
 
-# rooms_data: Dict[str, Dict[str, List[Dict[str, str]]]
-#                  ] = load_data("rooms_data.json")
-
-# rooms_data = load_data("rooms_data.json")
-# print(rooms_data)
 admin_user_id: str = ""
-
-
-class User(BaseModel):
-    userId: str
-    displayName: str
-
-
-class User_details(BaseModel):
-    User
-    isAdmin: bool
-    isActive: bool
-
-
-class User_action(BaseModel):
-    actionType: str
-    user: User
-    data: dict
-
-
+selected_storypoint:list=[]
 
 @router.post("/create_room", response_model=Dict[str, str])
 async def create_room(request: Request):
@@ -66,34 +43,20 @@ async def join_room(room_id: str, user_details: User):
             return JSONResponse(status_code=403, content={"error": "User is already in the room"})
     else:
         return JSONResponse(status_code=404, content={"error": "Room not found"})
-    
-
-
 
 
 @router.put("/room/{room_id}/update")
 async def update_room_data(room_id: str, data: User_action):
-    print(data)
+    selected_storypoint.append(data)
     rooms_data = load_data("rooms_data.json")
+    print(selected_storypoint)
     if room_id in rooms_data and room_id in room_websockets:
-        print(room_websockets, "this is room_websockets")
         print("hiii")
-
-        for websocket in room_websockets[room_id]:      
+        for websocket in room_websockets[room_id]:
             await websocket['websocket'].send_json(jsonable_encoder(data))
-        return JSONResponse(content=jsonable_encoder(data))
+        return JSONResponse(content=jsonable_encoder(selected_storypoint))
+    
+    
 
-        #     await websocket['websocket'].send_json(data)
-        # return {"response": data}
     else:
         raise HTTPException(status_code=404, detail="Room not found")
-
-
-# @router.put("/room/{room_id}/update")
-# async def update_room_data(room_id: str, data: dict):
-#     if room_id in rooms_data and room_id in room_websockets:
-#         for websocket in room_websockets[room_id]:
-#             await websocket.send_json(data)
-#         return {"response": data}
-#     else:
-#         raise HTTPException(status_code=404, detail="Room not found")

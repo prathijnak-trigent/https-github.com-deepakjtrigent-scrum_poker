@@ -4,11 +4,11 @@ export interface UserData extends User {
   isAdmin?: boolean;
   isActive?: boolean;
   data?: {
-    storyPoint: number;
+    storyPoints: number;
   };
 }
 
 export interface UserAction {
   actionType: string;
-  userData: {[userid: string]: UserData};
+  userData: {[userId: string]: UserData}
 }

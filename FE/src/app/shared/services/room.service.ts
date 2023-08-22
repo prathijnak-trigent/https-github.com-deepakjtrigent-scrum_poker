@@ -20,9 +20,8 @@ export class RoomService {
  return this.http.post<any>(`${scrumPokerUrls.roomUrls}/${roomId}/join`,user_details)
  }
 
- public updateStoryPoint(roomId: string, user_data:UserAction): Observable<any> {
-  console.log('esrdfg')
- return this.http.put<any>(`${scrumPokerUrls.roomUrls}/${roomId}/update`, user_data)
+ public updateStoryPoint(roomId: string, userAction:UserAction): Observable<any> {
+ return this.http.put<any>(`${scrumPokerUrls.roomUrls}/${roomId}/update`, userAction)
  }
 
 }
