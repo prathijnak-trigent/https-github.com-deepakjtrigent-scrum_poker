@@ -47,6 +47,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
 
     this.openUserDialog();
+
     this.websocketService.recievedMessage.subscribe((message: string): void => {
       if (message) {
         const userData: UserAction = JSON.parse(message);
@@ -65,7 +66,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     });
    
-    this.openUserDialog();
   }
 
   public ngOnDestroy(): void {
@@ -88,7 +88,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public toggleActive(index: number): void {
     this.activeIndex = this.activeIndex === index ? -1 : index;
-    this.heartBeat.resetHeartbeatTimeout();
+    this.heartBeat.resetHeartbeatTime(this.roomId);
   }
 
   public openUserDialog(): void {

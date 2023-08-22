@@ -9,18 +9,23 @@ import { User } from '../model/user';
   providedIn: 'root',
 })
 export class RoomService {
-  constructor(private http: HttpClient ) {}
+  constructor(private http: HttpClient) {}
 
-  public createRoom() : Observable<CreateRoomResponse> {
+  public createRoom(): Observable<CreateRoomResponse> {
     return this.http.post<any>(scrumPokerUrls.createRoomUrl, {});
   }
 
- public joinRoom(roomId: string,user_details:User): Observable<User> {
- return this.http.post<any>(`${scrumPokerUrls.roomUrls}/${roomId}/join`,user_details)
- }
-
- public heartBeat(roomId:string,userAction:any):Observable<any>{
-  return this.http.post<any>(`${scrumPokerUrls.roomUrls}/${roomId}/heartbeat`,userAction)
+  public joinRoom(roomId: string, user_details: User): Observable<User> {
+    return this.http.post<any>(
+      `${scrumPokerUrls.roomUrls}/${roomId}/join`,
+      user_details
+    );
   }
 
+  public heartBeat(roomId: string, userAction: any): Observable<any> {
+    return this.http.post<any>(
+      `${scrumPokerUrls.roomUrls}/${roomId}/heartbeat`,
+      userAction
+    );
+  }
 }

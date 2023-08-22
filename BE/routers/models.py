@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 from pydantic import BaseModel
 
 class User(BaseModel):
@@ -10,11 +10,11 @@ class User_data(BaseModel):
 
 
 class User_details (User):
-    isAdmin: bool | None
-    isActive: bool | None
-    data: User_data | None
+    isAdmin: Optional[bool]
+    isActive: Optional[bool]
+    data: Optional[User_data]
 
 
 class User_action(BaseModel):
     actionType: str
-    userData : Dict[str, User_details]
+    userData : Optional[Dict[str, User_details]]
