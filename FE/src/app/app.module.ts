@@ -18,6 +18,7 @@ import { RoomComponent } from './room/room.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { UserIdInterceptor } from './user-id.interceptor';
 import { UserFormComponent } from './user-form/user-form.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { UserFormComponent } from './user-form/user-form.component';
     RoomComponent,
     PageNotFoundComponent,
     UserFormComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,

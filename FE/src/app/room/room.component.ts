@@ -47,6 +47,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.roomId = params['roomId'];
     });
     this.openUserDialog();
+
     this.websocketService.recievedMessage.subscribe((message: string): void => {
       if (message) {
         const userData: UserAction = JSON.parse(message);
@@ -71,7 +72,6 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   public updateStoryPoints(storyPoints: number, index: number): void {
-    
     this.toggleActive(index);
     this.userAction = {
       actionType: 'STORY_POINT_SELECTION',
@@ -85,36 +85,33 @@ export class RoomComponent implements OnInit, OnDestroy {
         },
       },
     };
-    console.log(this.userAction)
+    console.log(this.userAction);
     this.roomService.updateStoryPoint(this.roomId, this.userAction).subscribe(
       (response) => {
         console.log(response, 'this is response');
       },
-      
+
       (error) => {
         this.toast.showToast('something went wrong', error);
       }
-      
     );
-    
   }
-
-  public toggleActive(index: number): void {
-    this.activeIndex = this.activeIndex === index ? -1 : index;
-    this.heartBeat.resetHeartbeatTimeout();
-  }
-
   public joinRoom(userDetails: User): void {
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
       (response) => {
         this.websocketService.connect(this.roomId);
-        this.heartBeat.startHeartbeat();
+        this.heartBeat.startwithHeartBeat(this.roomId);
       },
       (error) => {
         this.router.navigate(['Oops']);
         this.toast.showToast(error.error.error, toastState.danger);
       }
     );
+  }
+
+  public toggleActive(index: number): void {
+    this.activeIndex = this.activeIndex === index ? -1 : index;
+    this.heartBeat.resetHeartbeatTime(this.roomId);
   }
 
   public openUserDialog(): void {

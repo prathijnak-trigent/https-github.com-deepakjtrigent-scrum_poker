@@ -10,19 +10,28 @@ import { UserAction } from '../model/userAction';
   providedIn: 'root',
 })
 export class RoomService {
-  constructor(private http: HttpClient ) {}
+  constructor(private http: HttpClient) {}
 
-  public createRoom() : Observable<CreateRoomResponse> {
+  public createRoom(): Observable<CreateRoomResponse> {
     return this.http.post<any>(scrumPokerUrls.createRoomUrl, {});
   }
 
- public joinRoom(roomId: string,user_details:User): Observable<User> {
- return this.http.post<any>(`${scrumPokerUrls.roomUrls}/${roomId}/join`,user_details)
- }
+  public joinRoom(roomId: string, user_details: User): Observable<User> {
+    return this.http.post<any>(
+      `${scrumPokerUrls.roomUrls}/${roomId}/join`,
+      user_details
+    );
+  }
 
  public updateStoryPoint(roomId: string, userAction:UserAction): Observable<any> {
  return this.http.put<any>(`${scrumPokerUrls.roomUrls}/${roomId}/update`, userAction)
  }
 
+  public heartBeat(roomId: string, userAction: any): Observable<any> {
+    return this.http.post<any>(
+      `${scrumPokerUrls.roomUrls}/${roomId}/heartbeat`,
+      userAction
+    );
+  }
 }
 
