@@ -52,16 +52,19 @@ export class RoomComponent implements OnInit, OnDestroy {
       if (message) {
         const userData: UserAction = JSON.parse(message);
         if (userData.actionType === 'ACTIVE_USERS_LIST') {
-          for (const user_id in userData.userData) {
-            this.usersArray.push(userData.userData[user_id]);
-          }
+          (userData.userData as UserData[]).forEach((user: any) => {
+            this.usersArray.push(user);
+          });
         } else if (userData.actionType === 'NEW_USER_JOINED') {
-          this.usersArray.push(Object.values(userData.userData)[0]);
+          this.usersArray.push(userData.userData as UserData);
         } else if (userData.actionType === 'USER_LEFT') {
           this.usersArray = this.usersArray.filter(
             (user: UserData) =>
-              user.userId != Object.values(userData.userData)[0].userId
+              user.userId != (userData.userData as UserData).userId
           );
+        }
+        else if (userData.actionType === 'STORY_POINT_SELECTION'){
+          this.activeIndex
         }
       }
     });
@@ -72,16 +75,15 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   public updateStoryPoints(storyPoints: number, index: number): void {
+
     this.toggleActive(index);
     this.userAction = {
       actionType: 'STORY_POINT_SELECTION',
       userData: {
-        [this.user.userId]: {
-          userId: this.user.userId,
-          displayName: this.user.displayName,
-          data: {
-            storyPoints: cardCount[this.activeIndex],
-          },
+        userId: this.user.userId,
+        displayName: this.user.displayName,
+        data: {
+          storyPoints: storyPoints,
         },
       },
     };
