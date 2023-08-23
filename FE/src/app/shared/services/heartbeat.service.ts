@@ -5,6 +5,7 @@ import { UserAction } from '../model/userAction';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { WebsocketService } from './websocket.service';
 import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -13,13 +14,15 @@ export class HeartbeatService {
   public isTabActive: boolean = true;
   public lastActive: any;
   public heartbeatInterval: any;
-  public currentTime:any;
-  public subs : any;
+  public currentTime: any;
+  public subs: any;
 
   constructor(
     private cookieService: CookieService,
     private roomService: RoomService,
     private userDialog: MatDialog,
+    private websocket: WebsocketService,
+    private router : Router
   ) {}
 
   public setUpVisibilityChange(): void {
@@ -39,10 +42,8 @@ export class HeartbeatService {
     const sendUserAction: UserAction = {
       actionType: '',
       userData: {
-        [userInCookies.userId]: {
-          userId: userInCookies.userId,
-          displayName: userInCookies.displayName,
-        },
+        userId: userInCookies.userId,
+        displayName: userInCookies.displayName,
       },
     };
     if (this.isTabActive) {
@@ -51,28 +52,27 @@ export class HeartbeatService {
     this.sendHeartbeat(roomId, sendUserAction);
   }
 
-  public sendHeartbeat = (roomId: string,sendUserAction: UserAction) => {
-   this.roomService.heartBeat(roomId, sendUserAction).subscribe((response) => {
-     if(response.actionType  != null){
-      if (response.actionType == 'USER_INACTIVE') {
-        this.currentTime = Date.now() - this.lastActive;
-        if (this.currentTime > 60000) {
-          clearInterval(this.heartbeatInterval);
-          this.lastActive = Date.now();
-          this.openConfirmDialog(roomId);
+  public sendHeartbeat = (roomId: string, sendUserAction: UserAction) => {
+    this.roomService.heartBeat(roomId, sendUserAction).subscribe((response) => {
+      if (response.actionType != null) {
+        if (response.actionType == 'USER_INACTIVE') {
+          this.currentTime = Date.now() - this.lastActive;
+          if (this.currentTime > 60000) {
+            clearInterval(this.heartbeatInterval);
+            this.lastActive = Date.now();
+            this.openConfirmDialog(roomId);
+            this.websocket.disconnect();
+          }
         }
       }
-      }
-        console.log(response);
-      
     });
   };
 
-public startwithHeartBeat(roomId: string): void {
+  public startwithHeartBeat(roomId: string): void {
     this.heartbeatInterval = setInterval(() => {
       this.startHeartbeat(roomId);
-    }, 10000);
-}
+    }, 1000);
+  }
 
   public resetHeartbeatTime(roomId: string): void {
     clearInterval(this.heartbeatInterval);
@@ -81,10 +81,13 @@ public startwithHeartBeat(roomId: string): void {
 
   public openConfirmDialog(roomId: string): void {
     const userDialogRef: MatDialogRef<ConfirmDialogComponent> =
-      this.userDialog.open(ConfirmDialogComponent, {});
-      userDialogRef.afterClosed().subscribe((result) => {
-      if(result === "confirm"){
-        this.startwithHeartBeat(roomId)
+      this.userDialog.open(ConfirmDialogComponent, {
+        data: {roomId : roomId}
+      });
+      this.router.navigate(['/'])
+    userDialogRef.afterClosed().subscribe((result) => {
+      if (result === 'confirm') {
+        // this.startwithHeartBeat(roomId);
       }
     });
   }

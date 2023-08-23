@@ -10,5 +10,5 @@ export interface UserData extends User {
 
 export interface UserAction {
   actionType: string;
-  userData: {[userid: string]: UserData};
+  userData: UserData | UserData[];
 }

@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -9,18 +9,20 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class ConfirmDialogComponent {
   public roomId!: string;
+  
 
   constructor(
     private router: Router,
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: {roomId : string}
   ) {}
 
   public confirm(): void {
+    this.router.navigate(['/room', this.data.roomId])
     this.dialogRef.close();
   }
 
   public cancel(): void {
-    this.router.navigate(['/']);
     this.dialogRef.close();
   }
 }

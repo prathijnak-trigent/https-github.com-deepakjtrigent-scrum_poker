@@ -1,12 +1,14 @@
 from typing import Dict, Optional
 from pydantic import BaseModel
 
+
 class User(BaseModel):
     userId: str
     displayName: str
 
+
 class User_data(BaseModel):
-    storyPoints: float    
+    storyPoints: float
 
 
 class User_details (User):
@@ -17,4 +19,4 @@ class User_details (User):
 
 class User_action(BaseModel):
     actionType: str
-    userData : Optional[Dict[str, User_details]]
+    userData: Optional[User_details]
