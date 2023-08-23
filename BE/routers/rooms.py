@@ -9,7 +9,6 @@ from routers.websocket_manager import room_websockets
 from tinydb import TinyDB, Query, where
 from routers.models import User, User_data, User_action
 from fastapi.encoders import jsonable_encoder
-from fastapi.responses import JSONResponse
 
 db = TinyDB('rooms_data_db.json')
 router = APIRouter()
@@ -33,7 +32,7 @@ async def join_room(room_id: str, user_details: User):
     Room = Query()
     Users = Query()
     if rooms.contains(Room.roomId == room_id):
-      
+        # ulaa = rooms.contains((Room.users.any(Users.userId == user_details.userId) ))
         if not rooms.contains((Room.users.any(Users.userId == user_details.userId)) & (Room.roomId == room_id)):
             global admin_user_id
             user_to_be_stored = {
