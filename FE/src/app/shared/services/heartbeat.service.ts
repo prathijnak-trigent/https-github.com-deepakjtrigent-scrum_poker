@@ -1,48 +1,91 @@
 import { Injectable } from '@angular/core';
+import { RoomService } from './room.service';
+import { CookieService } from 'ngx-cookie-service';
+import { UserAction } from '../model/userAction';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { WebsocketService } from './websocket.service';
+import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HeartbeatService {
-  private lastActiveTime = Date.now();
-  private heartbeatInterval: any;
-  private isTabActive = true;
+  public isTabActive: boolean = true;
+  public lastActive: any;
+  public heartbeatInterval: any;
+  public currentTime:any;
+  public subs : any;
 
-  constructor() {
-    this.setupVisibilityChange();
-  }
+  constructor(
+    private cookieService: CookieService,
+    private roomService: RoomService,
+    private userDialog: MatDialog,
+  ) {}
 
-  public setupVisibilityChange(): void {
-    window.addEventListener('focus', () => {
-      this.isTabActive = true;
-    });
-
-    window.addEventListener('blur', () => {
-      this.isTabActive = false;
-      this.lastActiveTime = Date.now();
-    });
-  }
-
-  public startHeartbeat(): void {
-    const heartbeatIntervalTime = 10000;
-    const redirectAfterInactiveTime = 60000;
-    const sendHeartbeat = () => {
-      if (this.isTabActive) {
-        console.log('No Action');
-        this.lastActiveTime = Date.now();
+  public setUpVisibilityChange(): void {
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        this.isTabActive = false;
+        this.lastActive = Date.now();
       } else {
-        const inactiveDuration = Date.now() - this.lastActiveTime;
-        if (inactiveDuration > redirectAfterInactiveTime) {
-          console.log('Tab is inactive for too long');
-          window.clearInterval(this.heartbeatInterval);
+        this.isTabActive = true;
+      }
+    });
+  }
+
+  public startHeartbeat(roomId: string): void {
+    this.setUpVisibilityChange();
+    let userInCookies = JSON.parse(atob(this.cookieService.get('userDetails')));
+    const sendUserAction: UserAction = {
+      actionType: '',
+      userData: {
+        [userInCookies.userId]: {
+          userId: userInCookies.userId,
+          displayName: userInCookies.displayName,
+        },
+      },
+    };
+    if (this.isTabActive) {
+      sendUserAction.actionType = 'SENT_HEARTBEAT';
+    }
+    this.sendHeartbeat(roomId, sendUserAction);
+  }
+
+  public sendHeartbeat = (roomId: string,sendUserAction: UserAction) => {
+   this.roomService.heartBeat(roomId, sendUserAction).subscribe((response) => {
+     if(response.actionType  != null){
+      if (response.actionType == 'USER_INACTIVE') {
+        this.currentTime = Date.now() - this.lastActive;
+        if (this.currentTime > 60000) {
+          clearInterval(this.heartbeatInterval);
+          this.lastActive = Date.now();
+          this.openConfirmDialog(roomId);
         }
       }
-    };
-    this.heartbeatInterval = setInterval(sendHeartbeat, heartbeatIntervalTime);
+      }
+        console.log(response);
+      
+    });
+  };
+
+public startwithHeartBeat(roomId: string): void {
+    this.heartbeatInterval = setInterval(() => {
+      this.startHeartbeat(roomId);
+    }, 10000);
+}
+
+  public resetHeartbeatTime(roomId: string): void {
+    clearInterval(this.heartbeatInterval);
+    this.startwithHeartBeat(roomId);
   }
 
-  public resetHeartbeatTimeout(): void {
-    clearInterval(this.heartbeatInterval);
-    this.startHeartbeat();
+  public openConfirmDialog(roomId: string): void {
+    const userDialogRef: MatDialogRef<ConfirmDialogComponent> =
+      this.userDialog.open(ConfirmDialogComponent, {});
+      userDialogRef.afterClosed().subscribe((result) => {
+      if(result === "confirm"){
+        this.startwithHeartBeat(roomId)
+      }
+    });
   }
 }

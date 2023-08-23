@@ -13,7 +13,6 @@ router = APIRouter()
 
 admin_user_id: str = ""
 
-
 @router.post("/create_room", response_model=Dict[str, str])
 async def create_room(request: Request):
     room_id = str(uuid.uuid4())

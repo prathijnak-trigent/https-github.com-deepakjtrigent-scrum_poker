@@ -47,6 +47,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
 
     this.openUserDialog();
+
     this.websocketService.recievedMessage.subscribe((message: string): void => {
       if (message) {
         const userData : UserAction = JSON.parse(message);
@@ -66,6 +67,7 @@ export class RoomComponent implements OnInit, OnDestroy {
         }
       }
     });
+   
   }
 
   public ngOnDestroy(): void {
@@ -74,21 +76,21 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public joinRoom(userDetails: User): void {
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
-      (response) => {
-        // this.router.navigate([`room/${this.roomId}`]);
-        this.websocketService.connect(this.roomId);
-        this.heartBeat.startHeartbeat();
-      },
-      (error) => {
-        this.router.navigate(['Oops']);
-        this.toast.showToast(error.error.error, toastState.danger)
-      }
+        (response) => {
+            this.websocketService.connect(this.roomId);
+            this.heartBeat.startwithHeartBeat(this.roomId)
+        },
+        (error) => {
+          this.router.navigate(['Oops']);
+          this.toast.showToast(error.error.error, toastState.danger)
+        }
     );
-  }
+}
+
 
   public toggleActive(index: number): void {
     this.activeIndex = this.activeIndex === index ? -1 : index;
-    this.heartBeat.resetHeartbeatTimeout();
+    this.heartBeat.resetHeartbeatTime(this.roomId);
   }
 
   public openUserDialog(): void {

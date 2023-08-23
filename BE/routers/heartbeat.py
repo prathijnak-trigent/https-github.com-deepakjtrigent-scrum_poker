@@ -1,40 +1,49 @@
-from fastapi import Header,APIRouter,HTTPException
-# from routers.rooms import rooms_data
-import time
-from routers.websocket_manager import room_websockets
+import json
+from aiohttp import request
+from fastapi import APIRouter, HTTPException, Request, WebSocket
+from routers.rooms import load_data, save_or_update_data
 import asyncio
+from routers.websocket_manager import room_websockets
+from pydantic import BaseModel
+import time
+from routers.models import User_action
 
 router = APIRouter()
 
 user_last_hit = {}
 
-# async def update_timers():
-#     while True:
-#         for user_id, last_hit in user_last_hit.items():
-#             current_time = int(time.time())
-#             elapsed_time = current_time - last_hit
-#             if elapsed_time > 60:
-#                 message = ({"actionType": "USER_INACTIVE", "userId": user_id})
-#                 for room_id, websockets in room_websockets.items():
-#                     for web in websockets:
-#                         if web['user_id'] != user_id:
-#                             await web['websocket'].send_json(message)
-#                 user_last_hit[user_id] = current_time
-#         await asyncio.sleep(1)  # Update timers every 1 second
 
-# @router.post("/room/{room_id}/heartbeat")
-# async def heartbeat(room_id: str, userId: str = Header(...)):
-#     if room_id in rooms_data and any(user["userId"] == userId for user in rooms_data[room_id]["users"]):
-#         current_time = int(time.time())
-#         user_last_hit[userId] = current_time
-#         return {"message": f"Timer reset successfully for {userId}"}
-#     else:
-#         raise HTTPException(status_code=404, detail="Room or user not found")
+@router.post("/room/{room_id}/heartbeat")
+async def startHeartBeat(room_id: str, userAction: User_action):
+    if (userAction.actionType == "SENT_HEARTBEAT"):
+       heartbeat_Received=await heartbeat(room_id, userAction)
+       return heartbeat_Received
+    else:
+        not_Receive = await update_timers(userAction, None, room_id)
+        return not_Receive
 
-# # Create the background task to update timers
-# background_task = asyncio.create_task(update_timers())
 
-# # Add a shutdown event handler to cancel the background task when the app shuts down
-# @router.on_event("shutdown")
-# async def shutdown_background_task():
-#     background_task.cancel()
+async def heartbeat(room_id: str,userAction:User_action ):
+    userId: str=list(userAction.userData.keys())[0]
+    rooms_data = load_data('rooms_data.json')
+    if room_id in rooms_data:
+        if (user == userId for user in rooms_data[room_id]["users"]):
+            current_time = int(time.time())
+            user_last_hit[userId] = current_time
+            userAction.actionType = "RECEIVED_HEARTBEAT"
+            return userAction
+
+
+async def update_timers(userAction: User_action, websocket: None, room_id: str):
+    for last_hit in user_last_hit.values():
+        current_time = int(time.time())
+        elapsed_time = current_time - last_hit
+        if elapsed_time > 60:
+            message = ({"actionType": "USER_INACTIVE", "userId": list(
+                userAction.userData.keys())[0]})
+            for web in room_websockets.get(room_id, []):
+                if web["websocket"] != websocket:
+                    await web['websocket'].send_text(json.dumps(message))
+            userAction.actionType = "USER_INACTIVE"
+            return userAction
+        return userAction
