@@ -19,4 +19,4 @@ class User_details (User):
 
 class User_action(BaseModel):
     actionType: str
-    userData: Optional[Dict[str, User_details]]
+    userData: Optional[User_details]

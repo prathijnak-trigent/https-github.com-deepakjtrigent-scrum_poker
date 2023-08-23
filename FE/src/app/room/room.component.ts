@@ -50,12 +50,12 @@ export class RoomComponent implements OnInit, OnDestroy {
 
     this.websocketService.recievedMessage.subscribe((message: string): void => {
       if (message) {
-        const userData : UserAction = JSON.parse(message);
+        const userData: UserAction = JSON.parse(message);
         if (userData.actionType === 'ACTIVE_USERS_LIST') {
-            (userData.userData as UserData[]).forEach((user:any) => {
-                this.usersArray.push(user);
-            });
-          
+          (userData.userData as UserData[]).forEach((user: any) => {
+            this.usersArray.push(user);
+          });
+
           // }
         } else if (userData.actionType === 'NEW_USER_JOINED') {
           this.usersArray.push(userData.userData as UserData);
@@ -67,7 +67,6 @@ export class RoomComponent implements OnInit, OnDestroy {
         }
       }
     });
-   
   }
 
   public ngOnDestroy(): void {
@@ -76,17 +75,16 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public joinRoom(userDetails: User): void {
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
-        (response) => {
-            this.websocketService.connect(this.roomId);
-            this.heartBeat.startwithHeartBeat(this.roomId)
-        },
-        (error) => {
-          this.router.navigate(['Oops']);
-          this.toast.showToast(error.error.error, toastState.danger)
-        }
+      (response) => {
+        this.websocketService.connect(this.roomId);
+        this.heartBeat.startwithHeartBeat(this.roomId);
+      },
+      (error) => {
+        this.router.navigate(['Oops']);
+        this.toast.showToast(error.error.error, toastState.danger);
+      }
     );
-}
-
+  }
 
   public toggleActive(index: number): void {
     this.activeIndex = this.activeIndex === index ? -1 : index;

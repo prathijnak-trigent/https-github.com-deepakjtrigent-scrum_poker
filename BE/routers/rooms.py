@@ -29,7 +29,7 @@ async def join_room(room_id: str, user_details: User):
     Room = Query()
     Users = Query()
     if rooms.contains(Room.roomId == room_id):
-        ulaa = rooms.contains((Room.users.any(Users.userId == user_details.userId) ))
+        # ulaa = rooms.contains((Room.users.any(Users.userId == user_details.userId) ))
         if not rooms.contains((Room.users.any(Users.userId == user_details.userId)) & (Room.roomId == room_id)):
             global admin_user_id
             user_to_be_stored = {
