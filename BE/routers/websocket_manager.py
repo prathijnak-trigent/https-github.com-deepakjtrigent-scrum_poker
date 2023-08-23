@@ -3,22 +3,33 @@ import json
 
 from pydantic import BaseModel
 
-from routers.data_manager import load_data, delete_data
+from routers.data_manager import delete_data, save_data_in_db, update_data_in_db
+
+from tinydb import TinyDB, Query, where
+
+
 
 router = APIRouter()
 
 room_websockets = {}
 
 
-async def send_message(room_id: str, websocket, room_data_users, user_id, actionType: str):
+async def send_message(room_id: str, websocket, user_id, actionType: str):
+    db = TinyDB('rooms_data_db.json')
+    rooms = db.table('rooms')
+    Room = Query()
+    Users = Query()
+    users = rooms.search(Room.users.any(Users.userId == user_id))[0]['users']
+    user_index = next((index for (index, user) in enumerate(
+        users) if user['userId'] == user_id), None)
     for web in room_websockets.get(room_id, []):
         if actionType == "NEW_USER_JOINED":
             if web["websocket"] == websocket:
-                await web['websocket'].send_text(json.dumps({"actionType": "ACTIVE_USERS_LIST", "userData": room_data_users}))
+                await web['websocket'].send_text(json.dumps({"actionType": "ACTIVE_USERS_LIST", "userData": users}))
             else:
-                await web['websocket'].send_text(json.dumps({"actionType": actionType, "userData": {user_id: room_data_users[user_id]}}))
+                await web['websocket'].send_text(json.dumps({"actionType": actionType, "userData": users[user_index]}))
         elif actionType == "USER_LEFT" and web['websocket'] != websocket:
-            await web['websocket'].send_text(json.dumps({"actionType": actionType, "userData": {user_id: room_data_users[user_id]}} ))
+            await web['websocket'].send_text(json.dumps({"actionType": actionType, "userData": users[user_index]}))
 
 
 def delete_user(websocket, room_id, user_id):
@@ -27,25 +38,28 @@ def delete_user(websocket, room_id, user_id):
     del room_websockets[room_id][websocket_key]
     if len(room_websockets[room_id]) == 0:
         del room_websockets[room_id]
-    delete_data('rooms_data.json', room_id, user_id)
+    delete_data(room_id, user_id)
 
 
 @router.websocket("/room/{room_id}")
 async def websocket_endpoint(room_id: str, websocket: WebSocket):
-    rooms_data = load_data("rooms_data.json")
+    db = TinyDB('rooms_data_db.json')
+    rooms = db.table('rooms')
     await websocket.accept()
-    if room_id in rooms_data:
-        room_data_users = rooms_data[room_id]['users']
-        user_id = list(room_data_users.keys())[-1]
+    if rooms.contains(where('roomId') == room_id):
+        rooms = db.table('rooms')
+        Room = Query()
+        room_data_users = rooms.search(Room.roomId == room_id)[0]['users']
+        user_id = room_data_users[-1]['userId']
     if room_id not in room_websockets:
         room_websockets[room_id] = []
     room_websockets[room_id].append(
         {"websocket": websocket, "user_id": user_id})
-    await send_message(room_id, websocket, room_data_users, user_id, "NEW_USER_JOINED")
+    await send_message(room_id, websocket, user_id, "NEW_USER_JOINED")
     try:
         while True:
             await websocket.receive_text()
     except Exception as e:
-        await send_message(room_id, websocket, room_data_users, user_id, "USER_LEFT")
+        await send_message(room_id, websocket, user_id, "USER_LEFT")
         delete_user(websocket, room_id, user_id)
         return e
