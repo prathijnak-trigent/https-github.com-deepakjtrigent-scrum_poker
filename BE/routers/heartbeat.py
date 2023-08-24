@@ -14,7 +14,6 @@ user_last_hit = {}
 
 @router.post("/room/{room_id}/heartbeat")
 async def startHeartBeat(room_id: str, userAction: User_action):
-    return {}
     if (userAction.actionType == "SENT_HEARTBEAT"):
         heartbeat_Received = await heartbeat(room_id, userAction)
         return heartbeat_Received
@@ -41,7 +40,7 @@ async def update_timers(userAction: User_action, websocket: None, room_id: str):
     for last_hit in user_last_hit.values():
         current_time = int(time.time())
         elapsed_time = current_time - last_hit
-        if elapsed_time > 60:
+        if elapsed_time > 10:
             message = ({"actionType": "USER_INACTIVE",
                        "userId": userAction.userData.userId})
             for web in room_websockets.get(room_id, []):

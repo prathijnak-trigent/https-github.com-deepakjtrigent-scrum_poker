@@ -7,14 +7,15 @@ import uuid
 from routers.data_manager import save_data_in_db, update_data_in_db
 from routers.websocket_manager import room_websockets
 from tinydb import TinyDB, Query, where
-from routers.models import User, User_data, User_action
+from routers.models import User, User_data, User_action, User_details
 from fastapi.encoders import jsonable_encoder
 
-db = TinyDB('rooms_data_db.json')
+
 router = APIRouter()
 
 admin_user_id: str = ""
 selected_storypoint: list = []
+
 
 @router.post("/create_room", response_model=Dict[str, str])
 async def create_room(request: Request):
@@ -27,19 +28,22 @@ async def create_room(request: Request):
 
 
 @router.post("/room/{room_id}/join")
-async def join_room(room_id: str, user_details: User):
+async def join_room(room_id: str, user_details: User_details):
+    db = TinyDB('rooms_data_db.json')
     rooms = db.table('rooms')
     Room = Query()
     Users = Query()
     if rooms.contains(Room.roomId == room_id):
-        # ulaa = rooms.contains((Room.users.any(Users.userId == user_details.userId) ))
         if not rooms.contains((Room.users.any(Users.userId == user_details.userId)) & (Room.roomId == room_id)):
             global admin_user_id
             user_to_be_stored = {
                 "userId": user_details.userId,
                 "displayName": user_details.displayName,
                 "isAdmin": True if (user_details.userId == admin_user_id) else False,
-                "isActive": True
+                "isActive": True,
+                "data": {
+                    "storyPoints": None
+                }
             }
             update_data_in_db(user_to_be_stored, room_id)
             return user_to_be_stored
@@ -49,22 +53,25 @@ async def join_room(room_id: str, user_details: User):
         return JSONResponse(status_code=404, content={"error": "Room not found"})
 
 
-
-
-
-
 @router.put("/room/{room_id}/update")
 async def update_room_data(room_id: str, user_action: User_action):
-    rooms =db.table('rooms')
-    selected_storypoint.append(user_action.userData)
-  
-    
-    if rooms.contains(where('roomId')==room_id) and room_id in room_websockets:
+    db = TinyDB('rooms_data_db.json')
+    rooms = db.table('rooms')
+    Room = Query()
+    Users = Query()
+    user_id = user_action.userData.userId
+    if rooms.contains((where('roomId') == room_id) & (where('users') != None)):
+        room_document = rooms.search((Room.users.any(
+            Users.userId == user_action.userData.userId)) & (Room.roomId == room_id))
+        users = room_document[0]['users']
+        user_index = next((index for (index, user) in enumerate(
+            users) if user['userId'] == user_action.userData.userId), None)
+        room_document[0]['users'][user_index]['data']['storyPoints'] = user_action.userData.data.storyPoints
+        rooms.update(room_document[0], Room.roomId == room_id)
         for websocket in room_websockets[room_id]:
-            if user_action.userData.userId != websocket['user_id']:
+            if user_id != websocket['user_id']:
                 await websocket['websocket'].send_text(json.dumps(jsonable_encoder(user_action)))
-        return JSONResponse(content=jsonable_encoder(selected_storypoint))
-
+        return JSONResponse(content=jsonable_encoder(user_action))
     else:
-        raise HTTPException(status_code=404, detail="Room not found")
-
+        raise HTTPException(
+            status_code=404, detail="Room not found or User not found in the room")

@@ -1,12 +1,7 @@
-from fastapi import APIRouter, WebSocket, Request
-import json
-
-from pydantic import BaseModel
-
-from routers.data_manager import delete_data, save_data_in_db, update_data_in_db
-
+from fastapi import APIRouter, WebSocket
+from routers.data_manager import delete_data
 from tinydb import TinyDB, Query, where
-
+import json
 
 
 router = APIRouter()
