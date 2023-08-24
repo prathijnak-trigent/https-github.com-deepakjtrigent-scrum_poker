@@ -24,7 +24,11 @@ export class RoomComponent implements OnInit, OnDestroy {
   public activeIndex: number = -1;
   public roomId!: any;
   public user: User = defaultsUser;
-  public usersArray: UserData[] = [];
+  public usersArray: {
+    actionType: UserAction['actionType'];
+    userData: UserData;
+  }[] = [];
+  public userAction!: UserAction | any;
 
   // wiil be removed when gets data from backend
   public selectedPoints = [1, 2, 3];
@@ -45,25 +49,42 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params) => {
       this.roomId = params['roomId'];
     });
-
     this.openUserDialog();
 
     this.websocketService.recievedMessage.subscribe((message: string): void => {
       if (message) {
         const userData: UserAction = JSON.parse(message);
         if (userData.actionType === 'ACTIVE_USERS_LIST') {
-          (userData.userData as UserData[]).forEach((user: any) => {
-            this.usersArray.push(user);
+          (userData.userData as UserData[]).forEach((user: UserData) => {
+            this.usersArray.push({
+              actionType: 'STORY_POINTS_PENDING',
+              userData: user,
+            });
           });
-
-          // }
         } else if (userData.actionType === 'NEW_USER_JOINED') {
-          this.usersArray.push(userData.userData as UserData);
+          this.usersArray.push({
+            actionType: 'STORY_POINTS_PENDING',
+            userData: userData.userData as UserData,
+          });
         } else if (userData.actionType === 'USER_LEFT') {
           this.usersArray = this.usersArray.filter(
-            (user: UserData) =>
-              user.userId != (userData.userData as UserData).userId
+            (user: UserAction) =>
+              (user.userData as UserData).userId !=
+              (userData.userData as UserData).userId
           );
+        } else if (userData.actionType === 'STORY_POINT_SELECTION') {
+          this.usersArray.forEach((usersData: UserAction, index: number) => {
+            if (
+              (usersData.userData as UserData).userId ==
+              (userData.userData as UserData).userId
+            ) {
+              this.usersArray[index].userData['data'] = (
+                userData.userData as UserData
+              ).data;
+
+              this.usersArray[index].actionType = userData.actionType;
+            }
+          });
         }
       }
     });
@@ -73,6 +94,40 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.websocketService.disconnect();
   }
 
+  public updateStoryPoints(storyPoints: number, index: number): void {
+    this.toggleActive(index);
+    this.userAction = {
+      actionType: 'STORY_POINT_SELECTION',
+      userData: {
+        userId: this.user.userId,
+        displayName: this.user.displayName,
+        data: {
+          storyPoints: storyPoints,
+        },
+      },
+    };
+    this.roomService.updateStoryPoint(this.roomId, this.userAction).subscribe(
+      (response: UserAction) => {
+        console.log(response);
+        this.usersArray.forEach((usersData: UserAction, index: number) => {
+          if (
+            (usersData.userData as UserData).userId ==
+            (response.userData as UserData).userId
+          ) {
+            this.usersArray[index].userData['data'] = (
+              response.userData as UserData
+            ).data;
+
+            this.usersArray[index].actionType = response.actionType;
+          }
+        });
+      },
+
+      (error) => {
+        this.toast.showToast('something went wrong', error);
+      }
+    );
+  }
   public joinRoom(userDetails: User): void {
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
       (response) => {
@@ -108,6 +163,10 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.joinRoom(this.user);
         }
       });
-    } else this.joinRoom(JSON.parse(userInCookies));
+    } else {
+      this.user = JSON.parse(userInCookies);
+
+      this.joinRoom(this.user);
+    }
   }
 }

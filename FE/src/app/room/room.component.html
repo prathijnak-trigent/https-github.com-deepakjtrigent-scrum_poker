@@ -12,14 +12,17 @@
         class="text-primary-color font-bold w-[120px] xxs:w-[70px] xs:w-[90px] font-sans text-sm flex flex-col justify-center items-center gap-2 animate-popin-animation"
       >
         <img
-          *ngIf="true; else pointsSelectedState"
+          *ngIf="(user.actionType == 'STORY_POINTS_PENDING'); else pointsSelectedState"
           src="../../assets/pending-state.svg"
           alt="Pending State"
         />
-          <p>
-            {{ user.displayName.length < 7 ? user.displayName : user.displayName.slice(0, 4)
-            }}<span *ngIf="user.displayName.length > 7">...</span>
-          </p>
+        <p>
+          {{
+            user.userData.displayName.length < 14
+              ? user.userData.displayName
+              : user.userData.displayName.slice(0, 12)
+          }}<span *ngIf="user.userData.displayName.length > 14">...</span>
+        </p>
       </div>
     </div>
 
@@ -33,7 +36,7 @@
   >
     <ng-container *ngFor="let points of cardCounts; let index = index">
       <button
-        (click)="toggleActive(index)"
+        (click)="updateStoryPoints(points, index)"
         id="card_button"
         [class.active-button]="activeIndex === index"
         class="card-hover hover:bg-primary-color active:bg-primary-shade-color w-[56px] h-[84px] rounded-md bg-white text-gray-800 mt-3 font-semibold py-2 px-4 border border-gray-800 shadow-md transition"

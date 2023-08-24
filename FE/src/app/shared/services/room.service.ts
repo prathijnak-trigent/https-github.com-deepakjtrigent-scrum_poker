@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { CreateRoomResponse } from '../model/roomId';
 import { scrumPokerUrls } from '../url';
 import { User } from '../model/user';
+import { UserAction } from '../model/userAction';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,10 @@ export class RoomService {
     );
   }
 
+ public updateStoryPoint(roomId: string, userAction:UserAction): Observable<any> {
+ return this.http.put<any>(`${scrumPokerUrls.roomUrls}/${roomId}/update`, userAction)
+ }
+
   public heartBeat(roomId: string, userAction: any): Observable<any> {
     return this.http.post<any>(
       `${scrumPokerUrls.roomUrls}/${roomId}/heartbeat`,
@@ -29,3 +34,4 @@ export class RoomService {
     );
   }
 }
+
