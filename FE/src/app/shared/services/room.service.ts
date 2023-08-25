@@ -23,9 +23,15 @@ export class RoomService {
     );
   }
 
- public updateStoryPoint(roomId: string, userAction:UserAction): Observable<any> {
- return this.http.put<any>(`${scrumPokerUrls.roomUrls}/${roomId}/update`, userAction)
- }
+  public updateStoryPoint(
+    roomId: string,
+    userAction: UserAction
+  ): Observable<UserAction> {
+    return this.http.put<UserAction>(
+      `${scrumPokerUrls.roomUrls}/${roomId}/update`,
+      userAction
+    );
+  }
 
   public heartBeat(roomId: string, userAction: any): Observable<any> {
     return this.http.post<any>(
@@ -33,5 +39,24 @@ export class RoomService {
       userAction
     );
   }
-}
 
+  public revealStoryPoints(
+    roomId: string,
+    userAction: UserAction
+  ): Observable<UserAction> {
+    return this.http.put<UserAction>(
+      `${scrumPokerUrls.roomUrls}/${roomId}/reveal`,
+      userAction
+    );
+  }
+
+  public resetStoryPoints(
+    roomId: string,
+    userAction: UserAction
+  ): Observable<UserAction> {
+    return this.http.put<UserAction>(
+      `${scrumPokerUrls.roomUrls}/${roomId}/reset`,
+      userAction
+    );
+  }
+}

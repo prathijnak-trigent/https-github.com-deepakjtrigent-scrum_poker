@@ -57,13 +57,12 @@ export class HeartbeatService {
       if (response.actionType != null) {
         if (response.actionType == 'USER_INACTIVE') {
           this.currentTime = Date.now() - this.lastActive;
-          if (this.currentTime > 10000) {
+          if (this.currentTime > 20000) {
             clearInterval(this.heartbeatInterval);
             this.lastActive = Date.now();
             this.openConfirmDialog(roomId);
             this.websocket.disconnect();
           }
-          console.log(response)
         }
       }
     });
@@ -72,7 +71,7 @@ export class HeartbeatService {
   public startwithHeartBeat(roomId: string): void {
     this.heartbeatInterval = setInterval(() => {
       this.startHeartbeat(roomId);
-    }, 3000);
+    }, 5000);
   }
 
   public resetHeartbeatTime(roomId: string): void {
@@ -88,7 +87,6 @@ export class HeartbeatService {
       this.router.navigate(['/'])
     userDialogRef.afterClosed().subscribe((result) => {
       if (result === 'confirm') {
-        // this.startwithHeartBeat(roomId);
       }
     });
   }
