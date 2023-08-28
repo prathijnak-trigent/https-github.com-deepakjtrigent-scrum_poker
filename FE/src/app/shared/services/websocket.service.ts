@@ -30,7 +30,7 @@ export class WebsocketService {
     };
 
     this.socket.onerror = (): void => {
-      this.toast.showToast('Something went Bad', toastState.danger);
+      this.toast.showToast('Something went Bad', toastState.danger );
       this.connected = false;
     };
   }

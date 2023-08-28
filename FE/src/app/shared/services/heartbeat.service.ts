@@ -58,7 +58,7 @@ export class HeartbeatService {
       if (response.actionType != null) {
         if (response.actionType == 'USER_INACTIVE') {
           this.currentTime = Date.now() - this.lastActive;
-          if (this.currentTime > 60000) {
+          if (this.currentTime > 30000) {
             clearInterval(this.heartbeatInterval);
             this.lastActive = Date.now();
             this.openConfirmDialog(roomId);
@@ -89,7 +89,6 @@ export class HeartbeatService {
       this.router.navigate(['/'])
     userDialogRef.afterClosed().subscribe((result) => {
       if (result === 'confirm') {
-        // this.startwithHeartBeat(roomId);
       }
     });
   }

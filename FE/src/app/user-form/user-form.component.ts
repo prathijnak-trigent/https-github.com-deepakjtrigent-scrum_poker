@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { emojiData } from '../shared/app-data/emoji-data';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-form',
@@ -27,6 +28,7 @@ export class UserFormComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<UserFormComponent>,
+    private router : Router,
     @Inject(MAT_DIALOG_DATA)
     public data: {
       role: string;
@@ -71,8 +73,10 @@ export class UserFormComponent implements OnInit {
   }
 
   public closeDialog(): void {
+    this.router.navigate(['/']);
     this.dialogRef.close();
   }
+  
   public onRoleSelected(): void {
     this.selectedValue = this.selectedJobRole.value;
     for (let roles of emojiData) {
