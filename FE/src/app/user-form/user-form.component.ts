@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-form',
@@ -14,7 +15,8 @@ export class UserFormComponent {
     Validators.maxLength(30),
   ]);
 
-  constructor(public dialogRef: MatDialogRef<UserFormComponent>) {}
+  constructor(public dialogRef: MatDialogRef<UserFormComponent>,
+    private router : Router) {}
 
   public getErrorMessage(): string {
     if (
@@ -28,6 +30,7 @@ export class UserFormComponent {
   }
 
   public closeDialog(): void {
+    this.router.navigate(['/']);
     this.dialogRef.close();
   }
 }

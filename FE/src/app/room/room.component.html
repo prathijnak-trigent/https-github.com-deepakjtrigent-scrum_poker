@@ -11,11 +11,26 @@
         *ngFor="let user of usersArray"
         class="text-primary-color font-bold w-[120px] xxs:w-[70px] xs:w-[90px] font-sans text-sm flex flex-col justify-center items-center gap-2 animate-popin-animation"
       >
-        <img
-          *ngIf="(user.actionType == 'STORY_POINTS_PENDING'); else pointsSelectedState"
-          src="../../assets/pending-state.svg"
-          alt="Pending State"
-        />
+        <ng-container [ngSwitch]="user.actionType">
+          <img
+            *ngSwitchCase="'STORY_POINT_SELECTION'"
+            src="../../assets/selected-state.svg"
+            alt="Selected State"
+          />
+          <img
+            *ngSwitchCase="'STORY_POINT_HIDDEN'"
+            src="../../assets/hidden-state.svg"
+            alt="Hidden State"
+          />
+          <p *ngSwitchCase="'STORY_POINT_REVEAL'">
+            {{ user.userData.data?.storyPoints }}
+          </p>
+          <img
+            *ngSwitchDefault
+            src="../../assets/pending-state.svg"
+            alt="Pending State"
+          />
+        </ng-container>
         <p>
           {{
             user.userData.displayName.length < 14
@@ -26,16 +41,31 @@
       </div>
     </div>
 
-    <button mat-raised-button class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10">
-      Reveal
+    <button
+      *ngIf="!isStoryPointsRevealed && this.user.isAdmin"
+      [disabled]="isRevealBtnDisabled"
+      mat-raised-button
+      class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10"
+      (click)="revealStoryPoints()"
+    >
+      REVEAL
+    </button>
+    <button
+      *ngIf="isStoryPointsRevealed && this.user.isAdmin"
+      class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10"
+      mat-raised-button
+      (click)="resetStoryPoints()"
+    >
+      RESET
     </button>
   </div>
 
   <div
-    class="flex flex-row flex-wrap justify-center items-center gap-3 mx-3 my-2 text-justify xxs:w-[260px] sm: w-[334px] md:w-auto animate-popin-animation"
+    class="flex flex-row flex-wrap justify-center items-center md:h-28 gap-3 mx-3 my-2 text-justify xxs:w-[260px] sm: w-[334px] md:w-auto animate-popin-animation"
   >
-    <ng-container *ngFor="let points of cardCounts; let index = index">
+    <ng-container *ngIf="!isStoryPointsRevealed; else storyPointsAverage">
       <button
+        *ngFor="let points of cardCounts; let index = index"
         (click)="updateStoryPoints(points, index)"
         id="card_button"
         [class.active-button]="activeIndex === index"
@@ -46,22 +76,20 @@
     </ng-container>
   </div>
 
-  <ng-template
-    class="flex justify-center items-center flex-row gap-6 font-card-font mx-3 my-4"
-  >
-    <ng-container *ngFor="let points of selectedPoints; let index = index">
+  <ng-template #storyPointsAverage>
+    <ng-container *ngFor="let data of storyPointsData">
       <div
         class="flex flex-row justify-center items-center gap-2 xxs:hidden xs:hidden"
       >
         <button
           class="w-[56px] h-[84px] rounded-md bg-white text-gray-800 font-semibold py-2 px-4 border border-gray-800 shadow-md transition"
         >
-          {{ points }}
+          {{ data.points }}
         </button>
         <p
           class="flex justify-center text-base text-scrum-text-color text-center font-card-points"
         >
-          &#215;3
+          &#215;{{ data.repetition }}
         </p>
       </div>
     </ng-container>
@@ -71,26 +99,8 @@
       <div
         class="py-3 px-6 outline-none bg-primary-color text-xl leading-6 rounded-[28px] shadow shadow-slate-500/50"
       >
-        3.3
+        {{ averageStoryPointsValue | number : "1.1-2" }}
       </div>
     </div>
   </ng-template>
 </div>
-
-<ng-template #restart>
-  <button class="mt-12 xxs:mt-10 sm:mt-14 md:mt-0" mat-raised-button>
-    Restart
-  </button>
-</ng-template>
-
-<ng-template #pointsSelectedState>
-  <img src="../../assets/selected-state.svg" alt="Selected State" />
-</ng-template>
-
-<ng-template #pointsHiddenState>
-  <img
-    src="../../assets/hidden-state.svg"
-    alt="Hidden State"
-    class="opacity-50"
-  />
-</ng-template>
