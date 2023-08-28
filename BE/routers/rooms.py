@@ -36,7 +36,8 @@ async def join_room(room_id: str, user_details: User):
                 "userId": user_details.userId,
                 "displayName": user_details.displayName,
                 "isAdmin": True if (user_details.userId == admin_user_id) else False,
-                "isActive": True
+                "isActive": True,
+                "jobRole":user_details.jobRole,
             }
             update_data_in_db(user_to_be_stored, room_id)
             return user_to_be_stored
@@ -45,6 +46,7 @@ async def join_room(room_id: str, user_details: User):
     else:
         return JSONResponse(status_code=404, content={"error": "Room not found"})
 
+# "Scrum Master" if(user_details.userId == admin_user_id) else user_details.jobRole,
 
 # @router.put("/room/{room_id}/update")
 # async def update_room_data(room_id: str, data: dict):

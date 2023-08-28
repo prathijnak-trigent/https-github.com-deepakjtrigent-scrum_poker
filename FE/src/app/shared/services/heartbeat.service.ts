@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
+
 export class HeartbeatService {
   public isTabActive: boolean = true;
   public lastActive: any;
@@ -65,13 +66,14 @@ export class HeartbeatService {
           }
         }
       }
+      console.log(response)
     });
   };
 
   public startwithHeartBeat(roomId: string): void {
     this.heartbeatInterval = setInterval(() => {
       this.startHeartbeat(roomId);
-    }, 1000);
+    }, 10000);
   }
 
   public resetHeartbeatTime(roomId: string): void {

@@ -17,6 +17,7 @@ def update_data_in_db(data_to_be_stored, room_id: str):
     rooms.upsert(room_list[0],  Room.roomId == room_id)
 
 
+
 def delete_data(room_id: str, user_id: str):
     rooms = db.table('rooms')
     Room = Query()

@@ -25,7 +25,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   public roomId!: any;
   public user: User = defaultsUser;
   public usersArray: UserData[] = [];
-
+  public userJobRole: string = '';
+  public isDataStored!:boolean;
   // wiil be removed when gets data from backend
   public selectedPoints = [1, 2, 3];
 
@@ -74,6 +75,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   }
 
   public joinRoom(userDetails: User): void {
+    userDetails.jobRole = this.userJobRole;
+    console.log(userDetails);
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
       (response) => {
         this.websocketService.connect(this.roomId);
@@ -93,21 +96,34 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public openUserDialog(): void {
     const userInCookies: string = atob(this.cookieService.get('userDetails'));
-    if (!userInCookies) {
+    const jobRole=atob(this.cookieService.get('JobRole'));
+    this.userJobRole=jobRole
+
+    if (userInCookies) {
+       this.isDataStored=true
+    }
+
+    if(!jobRole || !userInCookies){
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
+          data: { role: 'Job Role', img: '🙂', disable: false,displayName:this.isDataStored ? JSON.parse(userInCookies).displayName: ""},
           width: '400px',
         });
 
-      userDialogRef.afterClosed().subscribe((userDisplayName: string): void => {
-        if (userDisplayName) {
+      userDialogRef.afterClosed().subscribe((response: any): void => {
+        if (response.displayName) {
           this.user.userId = uuidv4();
-          this.user.displayName = userDisplayName;
+          this.user.displayName = response.displayName;
+          this.userJobRole = response.selectedJobRole;
           this.storageService.storeUserInCookies(this.user);
+          this.userJobRole = response.selectedJobRole;
+          this.storageService.storeJobRole(response.selectedJobRole)
           this.storageService.userDetails = this.user;
           this.joinRoom(this.user);
         }
       });
-    } else this.joinRoom(JSON.parse(userInCookies));
-  }
+    }
+ else
+   this.joinRoom(JSON.parse(userInCookies));
+ }
 }

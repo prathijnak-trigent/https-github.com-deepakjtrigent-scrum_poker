@@ -17,7 +17,8 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrls: ['./landing-page.component.css'],
 })
 export class LandingPageComponent {
-  public user: User = defaultsUser
+  public user: User = defaultsUser;
+  public isDataStored!: boolean;
 
   constructor(
     private toast: ToastService,
@@ -42,17 +43,25 @@ export class LandingPageComponent {
 
   public openUserDialog(): void {
     const userInCookies = atob(this.cookieService.get('userDetails'));
-    if (!userInCookies) {
+    const jobRole=atob(this.cookieService.get('JobRole'));
+
+    if (userInCookies) {
+      this.isDataStored=true
+   }
+   
+    if (!jobRole || !userInCookies) {
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
+          data: { role: 'Scrum Master', img: '👩‍🏫', disable: true,displayName:this.isDataStored ? JSON.parse(userInCookies).displayName: "" },
           width: '400px',
         });
 
-      userDialogRef.afterClosed().subscribe((userDisplayName: string): void => {
-        if (userDisplayName) {
+      userDialogRef.afterClosed().subscribe((response: any): void => {
+        if (response && response.displayName) {
           this.user.userId = uuidv4();
-          this.user.displayName = userDisplayName;
+          this.user.displayName = response.displayName;
           this.storageService.storeUserInCookies(this.user);
+          this.storageService.storeJobRole(response.selectedJobRole)
           this.storageService.userDetails = this.user;
           this.createRoom();
         }

@@ -17,6 +17,18 @@ export class StorageService {
     });
   }
 
+
+  public storeJobRole(userJobRole: string ):void{
+    var now = new Date();
+   now.setTime(now.getTime() + 1 * 3600 * 1000);
+    const encodeJobRole:string =btoa(userJobRole);
+     this.cookieService.set('JobRole',encodeJobRole,{
+      expires:  now,
+      path: "/"
+     }
+     )
+  }
+
   public get userDetails(): User {
     return this.user;
   }
