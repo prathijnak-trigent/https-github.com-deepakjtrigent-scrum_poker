@@ -35,6 +35,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   public storyPointsData: { points: number; repetition: number }[] = [];
   public averageStoryPointsValue: number = 0;
   private messageSubsscription!: Subscription;
+  public isRevealBtnDisabled: boolean = true;
 
   constructor(
     private websocketService: WebsocketService,
@@ -54,79 +55,84 @@ export class RoomComponent implements OnInit, OnDestroy {
     });
     this.openUserDialog();
 
-    this.messageSubsscription =  this.websocketService.recievedMessage.subscribe((message: string): void => {
-      if (message) {
-        const userData: UserAction = JSON.parse(message);
+    this.messageSubsscription = this.websocketService.recievedMessage.subscribe(
+      (message: string): void => {
+        if (message) {
+          const userData: UserAction = JSON.parse(message);
 
-        switch (userData.actionType) {
-          case 'ACTIVE_USERS_LIST': {
-            (userData.userData as UserData[]).forEach((user: UserData) => {
-              if (user.userId == this.user.userId) this.user = user;
+          switch (userData.actionType) {
+            case 'ACTIVE_USERS_LIST': {
+              (userData.userData as UserData[]).forEach((user: UserData) => {
+                if (user.userId == this.user.userId) this.user = user;
+                this.usersArray.push({
+                  actionType: 'STORY_POINT_PENDING',
+                  userData: user,
+                });
+              });
+              break;
+            }
+            case 'NEW_USER_JOINED': {
               this.usersArray.push({
                 actionType: 'STORY_POINT_PENDING',
-                userData: user,
+                userData: userData.userData as UserData,
               });
-            });
-            break;
-          }
-          case 'NEW_USER_JOINED': {
-            this.usersArray.push({
-              actionType: 'STORY_POINT_PENDING',
-              userData: userData.userData as UserData,
-            });
-            break;
-          }
-          case 'USER_LEFT': {
-            this.usersArray = this.usersArray.filter(
-              (user: UserAction) =>
-                (user.userData as UserData).userId !=
-                (userData.userData as UserData).userId
-            );
-            break;
-          }
-          case 'STORY_POINT_SELECTION': {
-            this.usersArray.forEach((usersData: UserAction, index: number) => {
-              if (
-                (usersData.userData as UserData).userId ==
-                (userData.userData as UserData).userId
-              ) {
-                this.usersArray[index].userData['data'] = (
-                  userData.userData as UserData
-                ).data;
+              break;
+            }
+            case 'USER_LEFT': {
+              this.usersArray = this.usersArray.filter(
+                (user: UserAction) =>
+                  (user.userData as UserData).userId !=
+                  (userData.userData as UserData).userId
+              );
+              break;
+            }
+            case 'STORY_POINT_SELECTION': {
+              this.usersArray.forEach(
+                (usersData: UserAction, index: number) => {
+                  if (
+                    (usersData.userData as UserData).userId ==
+                    (userData.userData as UserData).userId
+                  ) {
+                    this.usersArray[index].userData['data'] = (
+                      userData.userData as UserData
+                    ).data;
 
-                this.usersArray[index].actionType = userData.actionType;
-              }
-            });
-            break;
-          }
-          case 'STORY_POINT_REVEAL': {
-            this.usersArray.forEach((usersData: UserAction) => {
-              if ((usersData.userData as UserData).data?.storyPoints) {
-                usersData.actionType = userData.actionType;
-                this.selectedPoints.push(
-                  (usersData.userData as UserData).data?.storyPoints as number
-                );
-              }
-            });
-            this.calculateAverage();
-            this.isStoryPointsRevealed = true;
-            break;
-          }
-          case 'STORY_POINT_RESET': {
-            this.usersArray.forEach((usersData: UserAction) => {
-              if ((usersData.userData as UserData).data?.storyPoints) {
-                usersData.actionType = 'STORY_POINTS_PENDING';
-                (userData.userData as UserData)['data'] = {
-                  storyPoints: null,
-                };
-                this.reset();
-              }
-            });
-            break;
+                    this.usersArray[index].actionType = userData.actionType;
+                  }
+                }
+              );
+              if (this.isRevealBtnDisabled) this.isRevealBtnDisabled = false;
+              break;
+            }
+            case 'STORY_POINT_REVEAL': {
+              this.usersArray.forEach((usersData: UserAction) => {
+                if ((usersData.userData as UserData).data?.storyPoints) {
+                  usersData.actionType = userData.actionType;
+                  this.selectedPoints.push(
+                    (usersData.userData as UserData).data?.storyPoints as number
+                  );
+                }
+              });
+              this.calculateAverage();
+              this.isStoryPointsRevealed = true;
+              break;
+            }
+            case 'STORY_POINT_RESET': {
+              this.usersArray.forEach((usersData: UserAction) => {
+                if ((usersData.userData as UserData).data?.storyPoints) {
+                  usersData.actionType = 'STORY_POINTS_PENDING';
+                  (userData.userData as UserData)['data'] = {
+                    storyPoints: null,
+                  };
+                  this.reset();
+                }
+              });
+              break;
+            }
           }
         }
       }
-    });
+    );
   }
 
   public ngOnDestroy(): void {
@@ -159,6 +165,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
             this.usersArray[index].actionType = response.actionType;
           }
+          if (this.isRevealBtnDisabled) this.isRevealBtnDisabled = false;
         });
       },
       (error) => {
@@ -263,23 +270,30 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.selectedPoints.sort((a, b) => a - b);
     let storyPointsSum = this.selectedPoints[0];
     let repeat = 1;
-    for (let i = 1; i < this.selectedPoints.length; i++) {
-      if (this.selectedPoints[i] == this.selectedPoints[i - 1]) {
-        repeat++;
-      } else {
-        this.storyPointsData.push({
-          points: this.selectedPoints[i - 1],
-          repetition: repeat,
-        });
-        repeat = 1;
+    if (this.selectedPoints.length == 1) {
+      this.storyPointsData.push({
+        points: this.selectedPoints[0],
+        repetition: repeat,
+      });
+    } else {
+      for (let i = 1; i < this.selectedPoints.length; i++) {
+        if (this.selectedPoints[i] == this.selectedPoints[i - 1]) {
+          repeat++;
+        } else {
+          this.storyPointsData.push({
+            points: this.selectedPoints[i - 1],
+            repetition: repeat,
+          });
+          repeat = 1;
+        }
+        if (i == this.selectedPoints.length - 1) {
+          this.storyPointsData.push({
+            points: this.selectedPoints[i],
+            repetition: repeat,
+          });
+        }
+        storyPointsSum += this.selectedPoints[i];
       }
-      if (i == this.selectedPoints.length - 1) {
-        this.storyPointsData.push({
-          points: this.selectedPoints[i],
-          repetition: repeat,
-        });
-      }
-      storyPointsSum += this.selectedPoints[i];
     }
     this.averageStoryPointsValue = storyPointsSum / this.selectedPoints.length;
   }
@@ -289,5 +303,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.isStoryPointsRevealed = false;
     this.toggleActive(-1);
     this.storyPointsData.length = 0;
+    this.isRevealBtnDisabled = true;
   }
 }

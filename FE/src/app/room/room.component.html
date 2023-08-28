@@ -43,6 +43,7 @@
 
     <button
       *ngIf="!isStoryPointsRevealed && this.user.isAdmin"
+      [disabled]="isRevealBtnDisabled"
       mat-raised-button
       class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10"
       (click)="revealStoryPoints()"
@@ -51,7 +52,7 @@
     </button>
     <button
       *ngIf="isStoryPointsRevealed && this.user.isAdmin"
-      class="mt-12 xxs:mt-10 sm:mt-14 md:mt-0"
+      class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10"
       mat-raised-button
       (click)="resetStoryPoints()"
     >
@@ -60,7 +61,7 @@
   </div>
 
   <div
-    class="flex flex-row flex-wrap justify-center items-center gap-3 mx-3 my-2 text-justify xxs:w-[260px] sm: w-[334px] md:w-auto animate-popin-animation"
+    class="flex flex-row flex-wrap justify-center items-center md:h-28 gap-3 mx-3 my-2 text-justify xxs:w-[260px] sm: w-[334px] md:w-auto animate-popin-animation"
   >
     <ng-container *ngIf="!isStoryPointsRevealed; else storyPointsAverage">
       <button
@@ -75,10 +76,7 @@
     </ng-container>
   </div>
 
-  <ng-template
-    #storyPointsAverage
-    class="flex justify-center items-center flex-row gap-6 font-card-font mx-3 my-4"
-  >
+  <ng-template #storyPointsAverage>
     <ng-container *ngFor="let data of storyPointsData">
       <div
         class="flex flex-row justify-center items-center gap-2 xxs:hidden xs:hidden"
