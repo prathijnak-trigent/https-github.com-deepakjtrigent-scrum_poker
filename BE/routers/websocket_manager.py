@@ -15,7 +15,8 @@ async def send_message(room_id: str, websocket, user_id, actionType: str):
     rooms = db.table('rooms')
     Room = Query()
     Users = Query()
-    users = rooms.search(Room.users.any(Users.userId == user_id))[0]['users']
+    users = rooms.search(Room.users.any(Users.userId == user_id) & (Room.roomId == room_id))[
+        0]['users']
     user_index = next((index for (index, user) in enumerate(
         users) if user['userId'] == user_id), None)
     for web in room_websockets.get(room_id, []):
@@ -34,10 +35,9 @@ async def delete_user(websocket, room_id, user_id):
     del room_websockets[room_id][websocket_key]
     delete_users(room_id, user_id)
     await asyncio.sleep(10)
-    if len(room_websockets[room_id]) == 0:
+    if room_id in room_websockets and len(room_websockets[room_id]) == 0:
         del room_websockets[room_id]
         delete_room(room_id)
-    
 
 
 @router.websocket("/room/{room_id}")

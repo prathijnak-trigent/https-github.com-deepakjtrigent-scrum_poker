@@ -19,6 +19,7 @@ import { Subscription } from 'rxjs';
   selector: 'app-room',
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css'],
+  providers: [WebsocketService],
 })
 export class RoomComponent implements OnInit, OnDestroy {
   public cardCounts: number[] = cardCount;
@@ -56,7 +57,6 @@ export class RoomComponent implements OnInit, OnDestroy {
       this.roomId = params['roomId'];
     });
     this.openUserDialog();
-
     this.messageSubsscription = this.websocketService.recievedMessage.subscribe(
       (message: string): void => {
         if (message) {
