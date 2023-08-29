@@ -175,6 +175,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     );
   }
+  
   public joinRoom(userDetails: User): void {
     userDetails.jobRole = this.userJobRole;
     console.log(userDetails);
@@ -226,7 +227,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
   else {
       this.user = JSON.parse(userInCookies);
-
       this.joinRoom(this.user);
     }
   }
