@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
+
 export class HeartbeatService {
   public isTabActive: boolean = true;
   public lastActive: any;
@@ -65,6 +66,7 @@ export class HeartbeatService {
           }
         }
       }
+      console.log(response)
     });
   };
 

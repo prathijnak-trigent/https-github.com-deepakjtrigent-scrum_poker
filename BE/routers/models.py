@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class User(BaseModel):
     userId: str
     displayName: str
+    jobRole :Optional[str]
 
 
 class User_data(BaseModel):
