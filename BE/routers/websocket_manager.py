@@ -1,7 +1,8 @@
 from fastapi import APIRouter, WebSocket
-from routers.data_manager import delete_data
+from routers.data_manager import delete_users, delete_room
 from tinydb import TinyDB, Query, where
 import json
+import asyncio
 
 
 router = APIRouter()
@@ -14,7 +15,8 @@ async def send_message(room_id: str, websocket, user_id, actionType: str):
     rooms = db.table('rooms')
     Room = Query()
     Users = Query()
-    users = rooms.search(Room.users.any(Users.userId == user_id))[0]['users']
+    users = rooms.search(Room.users.any(Users.userId == user_id) & (Room.roomId == room_id))[
+        0]['users']
     user_index = next((index for (index, user) in enumerate(
         users) if user['userId'] == user_id), None)
     for web in room_websockets.get(room_id, []):
@@ -27,13 +29,15 @@ async def send_message(room_id: str, websocket, user_id, actionType: str):
             await web['websocket'].send_text(json.dumps({"actionType": actionType, "userData": users[user_index]}))
 
 
-def delete_user(websocket, room_id, user_id):
+async def delete_user(websocket, room_id, user_id):
     websocket_key = next((index for (index, websocket_dict) in enumerate(
         room_websockets[room_id]) if websocket_dict['websocket'] == websocket), None)
     del room_websockets[room_id][websocket_key]
-    if len(room_websockets[room_id]) == 0:
+    delete_users(room_id, user_id)
+    await asyncio.sleep(10)
+    if room_id in room_websockets and len(room_websockets[room_id]) == 0:
         del room_websockets[room_id]
-    delete_data(room_id, user_id)
+        delete_room(room_id)
 
 
 @router.websocket("/room/{room_id}")
@@ -56,5 +60,5 @@ async def websocket_endpoint(room_id: str, websocket: WebSocket):
             await websocket.receive_text()
     except Exception as e:
         await send_message(room_id, websocket, user_id, "USER_LEFT")
-        delete_user(websocket, room_id, user_id)
+        await delete_user(websocket, room_id, user_id)
         return e

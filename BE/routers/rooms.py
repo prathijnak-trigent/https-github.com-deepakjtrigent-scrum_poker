@@ -41,6 +41,7 @@ async def join_room(room_id: str, user_details: User_details):
                 "displayName": user_details.displayName,
                 "isAdmin": True if (user_details.userId == admin_user_id) else False,
                 "isActive": True,
+                "jobRole":user_details.jobRole,
                 "data": {
                     "storyPoints": None
                 }
@@ -52,6 +53,7 @@ async def join_room(room_id: str, user_details: User_details):
     else:
         return JSONResponse(status_code=404, content={"error": "Room not found"})
 
+# "Scrum Master" if(user_details.userId == admin_user_id) else user_details.jobRole,
 
 @router.put("/room/{room_id}/update")
 async def update_room_data(room_id: str, user_action: User_action):
@@ -75,3 +77,49 @@ async def update_room_data(room_id: str, user_action: User_action):
     else:
         raise HTTPException(
             status_code=404, detail="Room not found or User not found in the room")
+
+
+@router.put("/room/{room_id}/reveal")
+async def update_room_data(room_id: str, user_action: User_action):
+    db = TinyDB('rooms_data_db.json')
+    rooms = db.table('rooms')
+    Room = Query()
+    Users = Query()
+    if rooms.contains(where('roomId') == room_id):
+        if (user_action.actionType == "STORY_POINT_REVEAL"):
+            if rooms.contains((Room.users.any(Users.userId == user_action.userData.userId)) & (Room.users.any(Users.isAdmin == True))):
+                for websocket in room_websockets[room_id]:
+                    if user_action.userData.userId != websocket['user_id']:
+                        await websocket['websocket'].send_text(json.dumps(jsonable_encoder(user_action)))
+                return user_action
+            else:
+                return JSONResponse(status_code=403, content={"error": "User is not admin"})
+        else:
+            return JSONResponse(status_code=400, content={"error": "Invalid Request"})
+    else:
+        return JSONResponse(status_code=404, content={"error": "Room not found"})
+
+
+@router.put("/room/{room_id}/reset")
+async def update_room_data(room_id: str, user_action: User_action):
+    db = TinyDB('rooms_data_db.json')
+    rooms = db.table('rooms')
+    Room = Query()
+    Users = Query()
+    if rooms.contains(where('roomId') == room_id):
+        if (user_action.actionType == "STORY_POINT_RESET"):
+            if rooms.contains((Room.users.any(Users.userId == user_action.userData.userId)) & (Room.users.any(Users.isAdmin == True))):
+                room_document = rooms.search(where('roomId') == room_id)
+                for user in room_document[0]['users']:
+                    user['data']['storyPoints'] = None
+                rooms.update(room_document[0], Room.roomId == room_id)
+                for websocket in room_websockets[room_id]:
+                    if user_action.userData.userId != websocket['user_id']:
+                        await websocket['websocket'].send_text(json.dumps(jsonable_encoder(user_action)))
+                return user_action
+            else:
+                return JSONResponse(status_code=403, content={"error": "User is not admin"})
+        else:
+            return JSONResponse(status_code=400, content={"error": "Invalid Request"})
+    else:
+        return JSONResponse(status_code=404, content={"error": "Room not found"})

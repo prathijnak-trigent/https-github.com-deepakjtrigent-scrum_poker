@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
 @Injectable({
   providedIn: 'root',
 })
+
 export class HeartbeatService {
   public isTabActive: boolean = true;
   public lastActive: any;
@@ -57,16 +58,16 @@ export class HeartbeatService {
       if (response.actionType != null) {
         if (response.actionType == 'USER_INACTIVE') {
           this.currentTime = Date.now() - this.lastActive;
-          if (this.currentTime > 60000) {
+          if (this.currentTime > 40000) {
             clearInterval(this.heartbeatInterval);
             this.lastActive = Date.now();
             this.openConfirmDialog(roomId);
             this.websocket.disconnect();
           }
-         
         }
         console.log(response)
       }
+      console.log(response)
     });
   };
 
@@ -89,7 +90,6 @@ export class HeartbeatService {
       this.router.navigate(['/'])
     userDialogRef.afterClosed().subscribe((result) => {
       if (result === 'confirm') {
-        // this.startwithHeartBeat(roomId);
       }
     });
   }
