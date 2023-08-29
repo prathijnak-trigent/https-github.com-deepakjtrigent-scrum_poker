@@ -25,6 +25,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   public cardCounts: number[] = cardCount;
   public activeIndex: number = -1;
   public roomId!: any;
+  public userJobRole: string = '';
   public user: UserData = defaultsUser;
   public usersArray: {
     actionType: UserAction['actionType'];
@@ -37,6 +38,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   public averageStoryPointsValue: number = 0;
   private messageSubsscription!: Subscription;
   public isRevealBtnDisabled: boolean = true;
+  public isDataStored!:boolean;
 
   constructor(
     private websocketService: WebsocketService,
@@ -173,7 +175,10 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     );
   }
+  
   public joinRoom(userDetails: User): void {
+    userDetails.jobRole = this.userJobRole;
+    console.log(userDetails);
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
       (response) => {
         this.websocketService.connect(this.roomId);
@@ -193,24 +198,37 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public openUserDialog(): void {
     const userInCookies: string = atob(this.cookieService.get('userDetails'));
-    if (!userInCookies) {
+    const jobRole=atob(this.cookieService.get('JobRole'));
+    this.userJobRole=jobRole
+
+    if (userInCookies) {
+       this.isDataStored=true
+    }
+
+    if(!jobRole || !userInCookies){
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
+          data: { role: 'Job Role', img: '🙂', disable: false,displayName:this.isDataStored ? JSON.parse(userInCookies).displayName: ""},
           width: '400px',
         });
 
-      userDialogRef.afterClosed().subscribe((userDisplayName: string): void => {
-        if (userDisplayName) {
+      userDialogRef.afterClosed().subscribe((response: any): void => {
+        if (response.displayName) {
           this.user.userId = uuidv4();
-          this.user.displayName = userDisplayName;
+          this.user.displayName = response.displayName;
+          this.userJobRole = response.selectedJobRole;
+          if(!userInCookies){
           this.storageService.storeUserInCookies(this.user);
+          }
+          this.userJobRole = response.selectedJobRole;
+          this.storageService.storeJobRole(response.selectedJobRole)
           this.storageService.userDetails = this.user;
           this.joinRoom(this.user);
         }
       });
-    } else {
+    }
+  else {
       this.user = JSON.parse(userInCookies);
-
       this.joinRoom(this.user);
     }
   }
