@@ -176,6 +176,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   public joinRoom(userDetails: User): void {
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
       (response) => {
+        console.log(response)
         this.websocketService.connect(this.roomId);
         this.heartBeat.startwithHeartBeat(this.roomId);
       },
