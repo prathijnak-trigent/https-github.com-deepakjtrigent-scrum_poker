@@ -9,12 +9,13 @@ body {
 
 :root {
   --primary: #0064fe;
-  --primary-shade: #00388f;
+  --primary-shade: #424e92;
   --primary-pale: #e5effe;
   --primary-highlight: #5c9bff;
   --text-pale: #e5effe;
   --background-color: #ffffff;
   --text-color: #848b99;
+  
 }
 
 html,

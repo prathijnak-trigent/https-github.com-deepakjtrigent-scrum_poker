@@ -1,3 +1,4 @@
+<body>
 <div
   class="w-screen flex justify-around h-screen flex-col items-center xxs:h-auto overflow-hidden"
 >
@@ -16,17 +17,17 @@
           src="../../assets/pending-state.svg"
           alt="Pending State"
         />
-        <p>
+        <p class=" text-scrum-button-inner-text">
           {{
             user.userData.displayName.length < 14
               ? user.userData.displayName
               : user.userData.displayName.slice(0, 12)
-          }}<span *ngIf="user.userData.displayName.length > 14">...</span>
+          }}<span class=" text-scrum-button-inner-text" *ngIf="user.userData.displayName.length > 14">...</span>
         </p>
       </div>
     </div>
 
-    <button mat-raised-button class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10">
+    <button class="mt-12 xxs:mt-10 sm:mt-14 md:mt-10  bg-scrum-button-inner-background hover:bg-hover-color active:bg-active-color font-medium text-scrum-button-inner-text px-6 py-2 rounded-lg">
       Reveal
     </button>
   </div>
@@ -39,7 +40,7 @@
         (click)="updateStoryPoints(points, index)"
         id="card_button"
         [class.active-button]="activeIndex === index"
-        class="card-hover hover:bg-primary-color active:bg-primary-shade-color w-[56px] h-[84px] rounded-md bg-white text-gray-800 mt-3 font-semibold py-2 px-4 border border-gray-800 shadow-md transition"
+        class="card-hover hover:bg-card-light active:bg-primary-shade-color w-[56px] h-[84px] rounded-md bg-white text-scrum-button-inner-text mt-3 font-semibold py-2 px-4 border-scrum-button-inner-text abc shadow-gray-500 transition"
       >
         {{ points }}
       </button>
@@ -94,3 +95,4 @@
     class="opacity-50"
   />
 </ng-template>
+</body>

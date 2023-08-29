@@ -1,8 +1,9 @@
-<h1 class="block p-6 text-2xl font-bold font-sans">Enter Display Name</h1>
-<mat-dialog-content> 
+<body class="abc">
+<h1 class="block p-6 text-2xl font-bold text-scrum-landing-text">Enter Display Name</h1>
+<mat-dialog-content  id="ddd"> 
   <mat-form-field>
-    <mat-label>Display</mat-label>
-    <input matInput [formControl]="displayName" placeholder="Display Name" required />
+    <mat-label class="text-gray-500">Display</mat-label>
+    <input matInput [formControl]="displayName" class="text-scrum-landing-text" placeholder="Display Name" required />
     <mat-error
       *ngIf="displayName.invalid && displayName.touched && displayName.dirty"
     >
@@ -14,11 +15,11 @@
   
   <button mat-button color="warn" (click)="closeDialog()">Cancel</button>
   <button
-    mat-raised-button
-    color="primary"
     [mat-dialog-close]="displayName.value"
     [disabled]="displayName.invalid"
+    class="bg-scrum-button-inner-background hover:bg-hover-color active:bg-active-color font-medium text-scrum-button-inner-text px-4 py-2 rounded-lg text-sm"
   >
     Enter Room
   </button>
 </mat-dialog-actions>
+</body>
