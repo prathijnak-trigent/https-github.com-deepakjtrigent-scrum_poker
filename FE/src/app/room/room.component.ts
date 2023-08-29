@@ -217,7 +217,9 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.user.userId = uuidv4();
           this.user.displayName = response.displayName;
           this.userJobRole = response.selectedJobRole;
+          if(!userInCookies){
           this.storageService.storeUserInCookies(this.user);
+          }
           this.userJobRole = response.selectedJobRole;
           this.storageService.storeJobRole(response.selectedJobRole)
           this.storageService.userDetails = this.user;

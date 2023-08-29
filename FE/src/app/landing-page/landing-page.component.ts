@@ -60,7 +60,9 @@ export class LandingPageComponent {
         if (response && response.displayName) {
           this.user.userId = uuidv4();
           this.user.displayName = response.displayName;
+          if(!userInCookies){
           this.storageService.storeUserInCookies(this.user);
+          }
           this.storageService.storeJobRole(response.selectedJobRole)
           this.storageService.userDetails = this.user;
           this.createRoom();
