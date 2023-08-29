@@ -21,7 +21,6 @@ export class UserFormComponent implements OnInit {
     ]),
     selectedJobRole: new FormControl(
       '',
-      // { value: '', disabled: this.data.disable },
       [Validators.required]
     ),
   });
@@ -70,11 +69,6 @@ export class UserFormComponent implements OnInit {
     if (this.selectedJobRole.hasError('required')) {
       return 'It is Required To Choose your job role';
     }
-  }
-
-  public closeDialog(): void {
-    this.router.navigate(['/']);
-    this.dialogRef.close();
   }
   
   public onRoleSelected(): void {
