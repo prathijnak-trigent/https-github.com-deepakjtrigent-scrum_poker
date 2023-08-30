@@ -7,7 +7,7 @@ from routers.websocket_manager import router as websocket_router
 
 # Define the URLs you want to accept cross-origin requests from.
 origins = [
-    "http://localhost:4200",
+    "http://localhost:4200",'*'
 ]
 
 # Configure logging to output at the INFO level
