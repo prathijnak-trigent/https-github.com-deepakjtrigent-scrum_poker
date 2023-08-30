@@ -5,6 +5,7 @@ import { UserAction } from '../model/userAction';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,12 +16,13 @@ export class HeartbeatService {
   public lastActive!: number;
   public heartbeatInterval: any;
   public currentTime!: number;
-
+  
   constructor(
     private cookieService: CookieService,
     private roomService: RoomService,
     private userDialog: MatDialog,
-    private router : Router
+    private router : Router,
+    private websocketService:WebsocketService
   ) {}
 
   public setUpVisibilityChange(): void {
@@ -75,20 +77,29 @@ export class HeartbeatService {
   }
 
   public openConfirmDialog(roomId: string): void {
+    var timer:any;
     const userDialogRef: MatDialogRef<ConfirmDialogComponent> =
       this.userDialog.open(ConfirmDialogComponent, {
         data: {roomId : roomId}
       });
-      this.router.navigate(['/'])
+
+      timer=setInterval(()=>{
+        closeDialog()
+      },60000)
+
     userDialogRef.afterClosed().subscribe((result) => {
-      if (result === 'confirm') {
-  this.startwithHeartBeat(roomId)
-      }
+     clearInterval(timer)
     });
+
+   var closeDialog=():void=>{
+    userDialogRef.close()
+    this.router.navigate(["/"])
+    this.websocketService.disconnect()
+   }
   }
 
   public destroyHeartbeat(): void {
     clearInterval(this.heartbeatInterval);
    }
-
+   
 }
