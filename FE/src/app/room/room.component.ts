@@ -15,6 +15,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { ToastService, toastState } from '../shared/services/toast.service';
 import { Subscription } from 'rxjs';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { emojiData } from '../shared/app-data/emoji-data';
 
 @Component({
   selector: 'app-room',
@@ -39,7 +40,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   public averageStoryPointsValue: number = 0;
   private messageSubsscription!: Subscription;
   public isRevealBtnDisabled: boolean = true;
-  public isDataStored!:boolean;
+  public isDataStored!: boolean;
+  public emojiData = emojiData;
 
   constructor(
     private websocketService: WebsocketService,
@@ -67,7 +69,7 @@ export class RoomComponent implements OnInit, OnDestroy {
             case 'ACTIVE_USERS_LIST': {
               (userData.userData as UserData[]).forEach((user: UserData) => {
                 if (user.userId == this.user.userId)
-                  this.user.isAdmin = user.isAdmin;
+                  this.user = user;
 
                 this.usersArray.push({
                   actionType: 'STORY_POINT_PENDING',
@@ -208,7 +210,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
   public joinRoom(userDetails: User): void {
     userDetails.jobRole = this.userJobRole;
     console.log(userDetails);
@@ -231,17 +233,24 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public openUserDialog(): void {
     const userInCookies: string = atob(this.cookieService.get('userDetails'));
-    const jobRole=atob(this.cookieService.get('JobRole'));
-    this.userJobRole=jobRole
+    const jobRole = atob(this.cookieService.get('JobRole'));
+    this.userJobRole = jobRole;
 
     if (userInCookies) {
-       this.isDataStored=true
+      this.isDataStored = true;
     }
 
-    if(!jobRole || !userInCookies){
+    if (!jobRole || !userInCookies) {
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
-          data: { role: 'Job Role', img: '🙂', disable: false,displayName:this.isDataStored ? JSON.parse(userInCookies).displayName: ""},
+          data: {
+            role: 'Job Role',
+            img: '🙂',
+            disable: false,
+            displayName: this.isDataStored
+              ? JSON.parse(userInCookies).displayName
+              : '',
+          },
           width: '400px',
         });
 
@@ -250,17 +259,16 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.user.userId = uuidv4();
           this.user.displayName = response.displayName;
           this.userJobRole = response.selectedJobRole;
-          if(!userInCookies){
-          this.storageService.storeUserInCookies(this.user);
+          if (!userInCookies) {
+            this.storageService.storeUserInCookies(this.user);
           }
           this.userJobRole = response.selectedJobRole;
-          this.storageService.storeJobRole(response.selectedJobRole)
+          this.storageService.storeJobRole(response.selectedJobRole);
           this.storageService.userDetails = this.user;
           this.joinRoom(this.user);
         }
       });
-    }
-  else {
+    } else {
       this.user = JSON.parse(userInCookies);
       this.joinRoom(this.user);
     }
@@ -396,6 +404,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
     this.averageStoryPointsValue = storyPointsSum / this.selectedPoints.length;
   }
+
+
 
   private reset(): void {
     this.selectedPoints.length = 0;
