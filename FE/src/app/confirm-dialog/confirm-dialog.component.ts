@@ -8,7 +8,6 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./confirm-dialog.component.css'],
 })
 export class ConfirmDialogComponent {
-  public roomId!: string;
   
 
   constructor(
@@ -18,7 +17,7 @@ export class ConfirmDialogComponent {
   ) {}
 
   public confirm(): void {
-    this.router.navigate(['/room', this.data.roomId])
+    this.router.navigate([`/room/${this.data.roomId}`])
     this.dialogRef.close();
   }
 
