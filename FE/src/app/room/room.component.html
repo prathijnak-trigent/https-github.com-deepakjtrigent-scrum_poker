@@ -1,6 +1,32 @@
 <div
   class="w-screen flex justify-around h-screen flex-col items-center xxs:h-auto overflow-hidden"
 >
+  <div class="w-full flex justify-end items-center p-2">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>groups</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        *ngFor="let activeUser of usersArray"
+        (click)="$event.stopPropagation()"
+      >
+        <mat-icon>person</mat-icon>
+        <span>{{ activeUser.userData.displayName | titlecase }}</span>
+        <button *ngIf="user.isAdmin && !activeUser.userData.isAdmin" mat-icon-button [matMenuTriggerFor]="menu">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="changeAdminUser(activeUser.userData)">
+            <span>Set As Admin</span>
+          </button>
+        </mat-menu>
+      </button>
+    </mat-menu>
+    <p class="mx-6 font-mono font-semibold text-xl">
+      {{ user.displayName | titlecase }}
+    </p>
+  </div>
   <div
     class="w-full h-3/4 xxs:h-[550px] xs:h-[700px] overflow-hidden flex flex-col justify-center items-center gap-7 xxs:gap-3 xs:gap-4"
   >
@@ -9,7 +35,8 @@
     >
       <div
         *ngFor="let user of usersArray"
-        class="text-primary-color font-bold w-[120px] xxs:w-[70px] xs:w-[90px] font-sans text-sm flex flex-col justify-center items-center gap-2 animate-popin-animation"
+        class="text-primary-color font-bold w-[120px] h-[120px] xxs:w-[70px] xs:w-[90px] font-sans text-sm flex flex-col justify-center items-center gap-2 animate-popin-animation"
+        
       >
         <ng-container [ngSwitch]="user.actionType">
           <img

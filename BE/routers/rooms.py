@@ -82,10 +82,12 @@ async def update_room_data(room_id: str, user_action: User_action):
     db = TinyDB('rooms_data_db.json')
     rooms = db.table('rooms')
     Room = Query()
-    Users = Query()
+    room_document = rooms.search(where('roomId') == room_id)
     if rooms.contains(where('roomId') == room_id):
         if (user_action.actionType == "STORY_POINT_REVEAL"):
-            if rooms.contains((Room.users.any(Users.userId == user_action.userData.userId)) & (Room.users.any(Users.isAdmin == True))):
+            admin_user = next(
+                (user for user in room_document[0]['users'] if user['userId'] == user_action.userData.userId and user['isAdmin'] == True), None)
+            if admin_user:
                 for websocket in room_websockets[room_id]:
                     if user_action.userData.userId != websocket['user_id']:
                         await websocket['websocket'].send_text(json.dumps(jsonable_encoder(user_action)))
@@ -103,11 +105,12 @@ async def update_room_data(room_id: str, user_action: User_action):
     db = TinyDB('rooms_data_db.json')
     rooms = db.table('rooms')
     Room = Query()
-    Users = Query()
+    room_document = rooms.search(where('roomId') == room_id)
     if rooms.contains(where('roomId') == room_id):
         if (user_action.actionType == "STORY_POINT_RESET"):
-            if rooms.contains((Room.users.any(Users.userId == user_action.userData.userId)) & (Room.users.any(Users.isAdmin == True))):
-                room_document = rooms.search(where('roomId') == room_id)
+            admin_user = next(
+                (user for user in room_document[0]['users'] if user['userId'] == user_action.userData.userId and user['isAdmin'] == True), None)
+            if admin_user:
                 for user in room_document[0]['users']:
                     user['data']['storyPoints'] = None
                 rooms.update(room_document[0], Room.roomId == room_id)
@@ -115,6 +118,42 @@ async def update_room_data(room_id: str, user_action: User_action):
                     if user_action.userData.userId != websocket['user_id']:
                         await websocket['websocket'].send_text(json.dumps(jsonable_encoder(user_action)))
                 return user_action
+            else:
+                return JSONResponse(status_code=403, content={"error": "User is not admin"})
+        else:
+            return JSONResponse(status_code=400, content={"error": "Invalid Request"})
+    else:
+        return JSONResponse(status_code=404, content={"error": "Room not found"})
+
+
+@router.put("/room/{room_id}/admin/change")
+async def update_room_data(room_id: str, user_action: User_action, request: Request):
+    db = TinyDB('rooms_data_db.json')
+    rooms = db.table('rooms')
+    Room = Query()
+    room_document = rooms.search(where('roomId') == room_id)
+    global admin_user_id
+    if rooms.contains(where('roomId') == room_id):
+        user_id = request.headers.get('SP-U')
+        if (user_action.actionType == "CHANGE_ADMIN"):
+            response_user_action = {
+                'actionType': user_action.actionType, 'userData': []}
+            admin_user = next(
+                (user for user in room_document[0]['users'] if user['userId'] == user_id and user['isAdmin'] == True), None)
+            if admin_user:
+                for user in room_document[0]['users']:
+                    if user_id == user['userId']:
+                        user['isAdmin'] = False
+                        response_user_action['userData'].append(user)
+                    if user['userId'] == user_action.userData.userId:
+                        user['isAdmin'] = True
+                        response_user_action['userData'].append(user)
+                rooms.update(room_document[0], Room.roomId == room_id)
+                admin_user_id = user_action.userData.userId
+                for websocket in room_websockets[room_id]:
+                    if user_id != websocket['user_id']:
+                        await websocket['websocket'].send_text(json.dumps(response_user_action))
+                return response_user_action
             else:
                 return JSONResponse(status_code=403, content={"error": "User is not admin"})
         else:

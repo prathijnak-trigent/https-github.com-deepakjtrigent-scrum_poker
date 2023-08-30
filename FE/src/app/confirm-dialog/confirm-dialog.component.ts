@@ -8,22 +8,26 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   styleUrls: ['./confirm-dialog.component.css'],
 })
 export class ConfirmDialogComponent {
-  public roomId!: string;
-  
+  // public roomId!: string;
 
   constructor(
     private router: Router,
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {roomId : string}
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      type: string;
+      value: string;
+    }
   ) {}
 
   public confirm(): void {
-    this.router.navigate(['/room', this.data.roomId])
+    if(this.data.type == "roomId"){
+    this.router.navigate(['/room', this.data.value]);
     this.dialogRef.close();
+    }
   }
 
   public cancel(): void {
     this.dialogRef.close();
-    
   }
 }

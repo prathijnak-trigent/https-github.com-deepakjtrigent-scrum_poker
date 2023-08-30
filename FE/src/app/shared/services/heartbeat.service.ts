@@ -22,7 +22,7 @@ export class HeartbeatService {
     private roomService: RoomService,
     private userDialog: MatDialog,
     private websocket: WebsocketService,
-    private router : Router
+    private router: Router
   ) {}
 
   public setUpVisibilityChange(): void {
@@ -82,9 +82,9 @@ export class HeartbeatService {
   public openConfirmDialog(roomId: string): void {
     const userDialogRef: MatDialogRef<ConfirmDialogComponent> =
       this.userDialog.open(ConfirmDialogComponent, {
-        data: {roomId : roomId}
+        data: { type: 'roomId', value: roomId },
       });
-      this.router.navigate(['/'])
+    this.router.navigate(['/']);
     userDialogRef.afterClosed().subscribe((result) => {
       if (result === 'confirm') {
       }
