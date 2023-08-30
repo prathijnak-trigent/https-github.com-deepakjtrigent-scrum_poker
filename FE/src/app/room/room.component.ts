@@ -59,6 +59,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.route.params.subscribe((params) => {
       this.roomId = params['roomId'];
     });
+
     this.openUserDialog();
     this.messageSubsscription = this.websocketService.recievedMessage.subscribe(
       (message: string): void => {
@@ -175,6 +176,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.websocketService.disconnect();
     this.messageSubsscription.unsubscribe();
+    this.heartBeat.destroyHeartbeat()
   }
 
   public updateStoryPoints(storyPoints: number, index: number): void {
@@ -237,7 +239,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.userJobRole = jobRole;
 
     if (userInCookies) {
-      this.isDataStored = true;
+       this.isDataStored=true
+       this.user = JSON.parse(userInCookies);
     }
 
     if (!jobRole || !userInCookies) {
@@ -255,12 +258,12 @@ export class RoomComponent implements OnInit, OnDestroy {
         });
 
       userDialogRef.afterClosed().subscribe((response: any): void => {
-        if (response.displayName) {
+        if (response) {
+          if(!userInCookies){
           this.user.userId = uuidv4();
           this.user.displayName = response.displayName;
           this.userJobRole = response.selectedJobRole;
-          if (!userInCookies) {
-            this.storageService.storeUserInCookies(this.user);
+          this.storageService.storeUserInCookies(this.user);
           }
           this.userJobRole = response.selectedJobRole;
           this.storageService.storeJobRole(response.selectedJobRole);

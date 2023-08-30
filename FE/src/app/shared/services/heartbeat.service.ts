@@ -3,9 +3,9 @@ import { RoomService } from './room.service';
 import { CookieService } from 'ngx-cookie-service';
 import { UserAction } from '../model/userAction';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { WebsocketService } from './websocket.service';
 import { ConfirmDialogComponent } from 'src/app/confirm-dialog/confirm-dialog.component';
 import { Router } from '@angular/router';
+import { WebsocketService } from './websocket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,17 +13,16 @@ import { Router } from '@angular/router';
 
 export class HeartbeatService {
   public isTabActive: boolean = true;
-  public lastActive: any;
+  public lastActive!: number;
   public heartbeatInterval: any;
-  public currentTime: any;
-  public subs: any;
-
+  public currentTime!: number;
+  
   constructor(
     private cookieService: CookieService,
     private roomService: RoomService,
     private userDialog: MatDialog,
-    private websocket: WebsocketService,
-    private router: Router
+    private router : Router,
+    private websocketService:WebsocketService
   ) {}
 
   public setUpVisibilityChange(): void {
@@ -32,7 +31,7 @@ export class HeartbeatService {
         this.isTabActive = false;
         this.lastActive = Date.now();
       } else {
-        this.isTabActive = true;
+        this.isTabActive = true;    
       }
     });
   }
@@ -54,26 +53,22 @@ export class HeartbeatService {
   }
 
   public sendHeartbeat = (roomId: string, sendUserAction: UserAction) => {
-    this.roomService.heartBeat(roomId, sendUserAction).subscribe((response) => {
-      if (response.actionType != null) {
-        if (response.actionType == 'USER_INACTIVE') {
+   this.roomService.heartBeat(roomId, sendUserAction).subscribe((response) => {
+        if (response && response.actionType == 'USER_INACTIVE') {
           this.currentTime = Date.now() - this.lastActive;
-          if (this.currentTime > 40000) {
+          if (this.currentTime > 15000) {
             clearInterval(this.heartbeatInterval);
-            this.lastActive = Date.now();
             this.openConfirmDialog(roomId);
-            this.websocket.disconnect();
           }
-        }
-      }
-      console.log(response)
+          }
+        console.log(response)
     });
   };
 
   public startwithHeartBeat(roomId: string): void {
     this.heartbeatInterval = setInterval(() => {
       this.startHeartbeat(roomId);
-    }, 10000);
+    }, 5000);
   }
 
   public resetHeartbeatTime(roomId: string): void {
@@ -82,14 +77,29 @@ export class HeartbeatService {
   }
 
   public openConfirmDialog(roomId: string): void {
+    var timer:any;
     const userDialogRef: MatDialogRef<ConfirmDialogComponent> =
       this.userDialog.open(ConfirmDialogComponent, {
         data: { type: 'roomId', value: roomId },
       });
-    this.router.navigate(['/']);
+
+      timer=setInterval(()=>{
+        closeDialog()
+      },60000)
+
     userDialogRef.afterClosed().subscribe((result) => {
-      if (result === 'confirm') {
-      }
+     clearInterval(timer)
     });
+
+   var closeDialog=():void=>{
+    userDialogRef.close()
+    this.router.navigate(["/"])
+    this.websocketService.disconnect()
+   }
   }
+
+  public destroyHeartbeat(): void {
+    clearInterval(this.heartbeatInterval);
+   }
+   
 }
