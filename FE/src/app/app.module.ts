@@ -14,6 +14,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
+import {MatSelectModule} from '@angular/material/select';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RoomComponent } from './room/room.component';
@@ -45,6 +46,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatMenuModule,
     MatIconModule,
     ReactiveFormsModule,
+    MatSelectModule 
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

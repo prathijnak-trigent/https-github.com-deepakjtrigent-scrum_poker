@@ -41,6 +41,7 @@ async def join_room(room_id: str, user_details: User_details):
                 "displayName": user_details.displayName,
                 "isAdmin": True if (user_details.userId == admin_user_id) else False,
                 "isActive": True,
+                "jobRole":user_details.jobRole,
                 "data": {
                     "storyPoints": None
                 }
@@ -52,6 +53,7 @@ async def join_room(room_id: str, user_details: User_details):
     else:
         return JSONResponse(status_code=404, content={"error": "Room not found"})
 
+# "Scrum Master" if(user_details.userId == admin_user_id) else user_details.jobRole,
 
 @router.put("/room/{room_id}/update")
 async def update_room_data(room_id: str, user_action: User_action):
