@@ -16,6 +16,7 @@ import { CookieService } from 'ngx-cookie-service';
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.css'],
 })
+
 export class LandingPageComponent {
   public user: User = defaultsUser;
   public isDataStored!: boolean;
@@ -58,9 +59,9 @@ export class LandingPageComponent {
 
       userDialogRef.afterClosed().subscribe((response: any): void => {
         if (response && response.displayName) {
+          if(!userInCookies){
           this.user.userId = uuidv4();
           this.user.displayName = response.displayName;
-          if(!userInCookies){
           this.storageService.storeUserInCookies(this.user);
           }
           this.storageService.storeJobRole(response.selectedJobRole)
