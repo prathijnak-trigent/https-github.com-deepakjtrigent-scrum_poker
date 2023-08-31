@@ -9,7 +9,6 @@ router = APIRouter()
 
 room_websockets = {}
 
-
 async def send_message(room_id: str, websocket, user_id, actionType: str):
     db = TinyDB('rooms_data_db.json')
     rooms = db.table('rooms')
@@ -28,13 +27,12 @@ async def send_message(room_id: str, websocket, user_id, actionType: str):
         elif actionType == "USER_LEFT" and web['websocket'] != websocket:
             await web['websocket'].send_text(json.dumps({"actionType": actionType, "userData": users[user_index]}))
 
-
 async def delete_user(websocket, room_id, user_id):
     websocket_key = next((index for (index, websocket_dict) in enumerate(
         room_websockets[room_id]) if websocket_dict['websocket'] == websocket), None)
     del room_websockets[room_id][websocket_key]
     delete_users(room_id, user_id)
-    await asyncio.sleep(10)
+    await asyncio.sleep(20)
     if room_id in room_websockets and len(room_websockets[room_id]) == 0:
         del room_websockets[room_id]
         delete_room(room_id)
