@@ -85,7 +85,7 @@ export class HeartbeatService {
 
       timer=setInterval(()=>{
         closeDialog()
-      },60000)
+      },40000)
 
     userDialogRef.afterClosed().subscribe((result) => {
      clearInterval(timer)
