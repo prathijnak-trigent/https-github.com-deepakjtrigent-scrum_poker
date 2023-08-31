@@ -20,7 +20,8 @@ module.exports = {
         "active-color":"#929fe0",
         "card-darkest":"#39458a",
         "card-dark-color":"#6974b1",
-        "card-light":"#9da4cf"
+        "card-light":"#9da4cf",
+        "main-text":"#3d4450"
 
 
       },

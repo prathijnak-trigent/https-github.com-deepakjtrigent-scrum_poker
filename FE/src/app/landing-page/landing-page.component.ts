@@ -53,7 +53,7 @@ export class LandingPageComponent {
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
           data: { role: 'Scrum Master', img: '👩‍🏫', disable: true,displayName:this.isDataStored ? JSON.parse(userInCookies).displayName: "" },
-          width: '400px',
+          width: '370px',
         });
 
       userDialogRef.afterClosed().subscribe((response: any): void => {

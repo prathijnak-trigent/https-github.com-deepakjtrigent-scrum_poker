@@ -209,7 +209,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
           data: { role: 'Job Role', img: '🙂', disable: false,displayName:this.isDataStored ? JSON.parse(userInCookies).displayName: ""},
-          width: '400px',
+          width: '370px',
         });
 
       userDialogRef.afterClosed().subscribe((response: any): void => {

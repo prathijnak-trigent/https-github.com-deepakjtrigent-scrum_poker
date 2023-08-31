@@ -12,11 +12,15 @@
 #card_button{
 font-family: 'Space Mono' !important;
 }
-body {
-  background-image: radial-gradient(rgb(200, 199, 199) 0.8px, transparent 0);
+/* .main{
+  background-image: radial-gradient(rgba(215, 214, 214, 0.463) 0.8px, transparent 0);
   background-size: 15px 15px;
   z-index: -1;
+} */
+.box{
+  /* box-shadow: 0px 0px 5px; */
+  box-shadow: 0 1px 2px 1px rgba(168,182,191,.6);
 }
-.abc{
-  box-shadow: 0px 0px 5px;
+.section2{
+  overflow:"scroll";
 }

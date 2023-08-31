@@ -11,8 +11,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatSelectModule} from '@angular/material/select';
+import {MatIconModule} from '@angular/material/icon';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
 import { RoomComponent } from './room/room.component';
@@ -42,7 +43,8 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    MatSelectModule 
+    MatSelectModule,
+    MatIconModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
