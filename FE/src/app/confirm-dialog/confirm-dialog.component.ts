@@ -16,13 +16,19 @@ export class ConfirmDialogComponent{
     public heartbeatService :HeartbeatService,
     public websocketService: WebsocketService,
     public dialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: {roomId : string}
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      type: string;
+      value: string;
+    }
   ) {}
 
   public confirm(): void {
-    this.router.navigate(['/room', this.data.roomId])
-    this.heartbeatService.startwithHeartBeat(this.data.roomId)
-    this.dialogRef.close(); 
+    if(this.data.type == "roomId"){
+    this.router.navigate(['/room', this.data.value]);
+    this.heartbeatService.startwithHeartBeat(this.data.value)
+    this.dialogRef.close();
+    }
   }
 
   public cancel():void {

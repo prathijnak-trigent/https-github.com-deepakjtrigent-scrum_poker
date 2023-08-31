@@ -1,6 +1,48 @@
 <div
   class="w-screen flex justify-around h-screen flex-col items-center xxs:h-auto overflow-hidden"
 >
+  <div class="w-full flex justify-end items-center p-2">
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>groups</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button
+        mat-menu-item
+        *ngFor="let activeUser of usersArray"
+        (click)="$event.stopPropagation()"
+      >
+        <ng-container [ngSwitch]="activeUser.userData.jobRole">
+          <span *ngSwitchCase="emojiData[0].role">{{ emojiData[0].img }}</span>
+          <span *ngSwitchCase="emojiData[1].role">{{ emojiData[1].img }}</span>
+          <span *ngSwitchCase="emojiData[2].role">{{ emojiData[2].img }}</span>
+          <span *ngSwitchCase="emojiData[3].role">{{ emojiData[3].img }}</span>
+          <span *ngSwitchCase="emojiData[4].role">{{ emojiData[4].img }}</span>
+          <span *ngSwitchCase="emojiData[5].role">{{ emojiData[5].img }}</span>
+          <span *ngSwitchCase="emojiData[6].role">{{ emojiData[6].img }}</span>
+          <span *ngSwitchCase="emojiData[7].role">{{ emojiData[7].img }}</span>
+          <span *ngSwitchCase="emojiData[8].role">{{ emojiData[8].img }}</span>
+        </ng-container>
+
+        <span>{{ activeUser.userData.displayName | titlecase }} <span *ngIf="activeUser.userData.isAdmin">(Admin)</span></span>
+        <button
+          *ngIf="user.isAdmin && !activeUser.userData.isAdmin"
+          mat-icon-button
+          [matMenuTriggerFor]="menu"
+        >
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="changeAdminUser(activeUser.userData)">
+            <span>Set As Admin</span>
+          </button>
+        </mat-menu>
+      </button>
+    </mat-menu>
+    <p class="mx-6 font-mono flex flex-col items-center">
+      <span class="font-semibold  text-xl">{{ user.displayName | titlecase }}</span>
+      <span class="text-sm font-medium">{{user.jobRole | titlecase}}</span>
+    </p>
+  </div>
   <div
     class="w-full h-3/4 xxs:h-[550px] xs:h-[700px] overflow-hidden flex flex-col justify-center items-center gap-7 xxs:gap-3 xs:gap-4"
   >
@@ -9,7 +51,7 @@
     >
       <div
         *ngFor="let user of usersArray"
-        class="text-primary-color font-bold w-[120px] xxs:w-[70px] xs:w-[90px] font-sans text-sm flex flex-col justify-center items-center gap-2 animate-popin-animation"
+        class="text-primary-color font-bold w-[120px] h-[120px] xxs:w-[70px] xs:w-[90px] font-sans text-sm flex flex-col justify-center items-center gap-2 animate-popin-animation"
       >
         <ng-container [ngSwitch]="user.actionType">
           <img

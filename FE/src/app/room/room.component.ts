@@ -14,6 +14,8 @@ import { StorageService } from '../shared/services/storage.service';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastService, toastState } from '../shared/services/toast.service';
 import { Subscription } from 'rxjs';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+import { emojiData } from '../shared/app-data/emoji-data';
 
 @Component({
   selector: 'app-room',
@@ -38,7 +40,8 @@ export class RoomComponent implements OnInit, OnDestroy {
   public averageStoryPointsValue: number = 0;
   private messageSubsscription!: Subscription;
   public isRevealBtnDisabled: boolean = true;
-  public isDataStored!:boolean;
+  public isDataStored!: boolean;
+  public emojiData = emojiData;
 
   constructor(
     private websocketService: WebsocketService,
@@ -66,7 +69,9 @@ export class RoomComponent implements OnInit, OnDestroy {
           switch (userData.actionType) {
             case 'ACTIVE_USERS_LIST': {
               (userData.userData as UserData[]).forEach((user: UserData) => {
-                if (user.userId == this.user.userId) this.user = user;
+                if (user.userId == this.user.userId)
+                  this.user = user;
+
                 this.usersArray.push({
                   actionType: 'STORY_POINT_PENDING',
                   userData: user,
@@ -132,6 +137,36 @@ export class RoomComponent implements OnInit, OnDestroy {
               });
               break;
             }
+            case 'CHANGE_ADMIN': {
+              (userData.userData as UserData[]).forEach((userData) => {
+                if (this.user.userId == userData.userId) {
+                  this.user.isAdmin = true;
+                  this.toast.showToast(
+                    `Congrats ${this.user.displayName.toUpperCase()}! You are now Admin`,
+                    toastState.success
+                  );
+                }
+              });
+
+              this.usersArray.forEach((usersDetails: UserAction) => {
+                if (
+                  (usersDetails.userData as UserData).userId ==
+                  (userData.userData as UserData[])[0].userId
+                ) {
+                  (usersDetails.userData as UserData).isAdmin = (
+                    userData.userData as UserData[]
+                  )[0].isAdmin;
+                } else if (
+                  (usersDetails.userData as UserData).userId ==
+                  (userData.userData as UserData[])[1].userId
+                ) {
+                  (usersDetails.userData as UserData).isAdmin = (
+                    userData.userData as UserData[]
+                  )[1].isAdmin;
+                }
+              });
+              break;
+            }
           }
         }
       }
@@ -177,7 +212,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
+
   public joinRoom(userDetails: User): void {
     userDetails.jobRole = this.userJobRole;
     console.log(userDetails);
@@ -200,18 +235,25 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public openUserDialog(): void {
     const userInCookies: string = atob(this.cookieService.get('userDetails'));
-    const jobRole=atob(this.cookieService.get('JobRole'));
-    this.userJobRole=jobRole
+    const jobRole = atob(this.cookieService.get('JobRole'));
+    this.userJobRole = jobRole;
 
     if (userInCookies) {
        this.isDataStored=true
        this.user = JSON.parse(userInCookies);
     }
 
-    if(!jobRole || !userInCookies){
+    if (!jobRole || !userInCookies) {
       const userDialogRef: MatDialogRef<UserFormComponent> =
         this.userDialog.open(UserFormComponent, {
-          data: { role: 'Job Role', img: '🙂', disable: false,displayName:this.isDataStored ? JSON.parse(userInCookies).displayName: ""},
+          data: {
+            role: 'Job Role',
+            img: '🙂',
+            disable: false,
+            displayName: this.isDataStored
+              ? JSON.parse(userInCookies).displayName
+              : '',
+          },
           width: '400px',
         });
 
@@ -224,16 +266,63 @@ export class RoomComponent implements OnInit, OnDestroy {
           this.storageService.storeUserInCookies(this.user);
           }
           this.userJobRole = response.selectedJobRole;
-          this.storageService.storeJobRole(response.selectedJobRole)
+          this.storageService.storeJobRole(response.selectedJobRole);
           this.storageService.userDetails = this.user;
           this.joinRoom(this.user);
         }
       });
-    }
-  else {
+    } else {
       this.user = JSON.parse(userInCookies);
       this.joinRoom(this.user);
     }
+  }
+
+  public changeAdminUser(newAdminUser: UserData): void {
+    const confrimationDailog = this.userDialog.open(ConfirmDialogComponent, {
+      data: { type: 'displayName', value: newAdminUser.displayName },
+    });
+
+    confrimationDailog.afterClosed().subscribe((data: string) => {
+      if (data == 'displayName') {
+        this.roomService
+          .changeAdminUser(
+            {
+              actionType: 'CHANGE_ADMIN',
+              userData: {
+                userId: newAdminUser.userId,
+                displayName: newAdminUser.displayName,
+                isAdmin: true,
+              },
+            },
+            this.roomId
+          )
+          .subscribe(
+            (response: UserAction) => {
+              this.user.isAdmin = false;
+              this.usersArray.forEach((usersDetails: UserAction) => {
+                if (
+                  (usersDetails.userData as UserData).userId ==
+                  (response.userData as UserData[])[0].userId
+                ) {
+                  (usersDetails.userData as UserData).isAdmin = (
+                    response.userData as UserData[]
+                  )[0].isAdmin;
+                } else if (
+                  (usersDetails.userData as UserData).userId ==
+                  (response.userData as UserData[])[1].userId
+                ) {
+                  (usersDetails.userData as UserData).isAdmin = (
+                    response.userData as UserData[]
+                  )[1].isAdmin;
+                }
+              });
+            },
+            (error) => {
+              this.toast.showToast(error.error.error, toastState.danger);
+            }
+          );
+      }
+    });
   }
 
   public revealStoryPoints(): void {
@@ -318,6 +407,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
     this.averageStoryPointsValue = storyPointsSum / this.selectedPoints.length;
   }
+
+
 
   private reset(): void {
     this.selectedPoints.length = 0;

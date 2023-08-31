@@ -12,6 +12,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 
 import { LandingPageComponent } from './landing-page/landing-page.component';
@@ -41,6 +43,8 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
     HttpClientModule,
     MatFormFieldModule,
     MatInputModule,
+    MatMenuModule,
+    MatIconModule,
     ReactiveFormsModule,
     MatSelectModule 
   ],

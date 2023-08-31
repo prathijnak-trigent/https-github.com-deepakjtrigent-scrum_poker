@@ -80,12 +80,12 @@ export class HeartbeatService {
     var timer:any;
     const userDialogRef: MatDialogRef<ConfirmDialogComponent> =
       this.userDialog.open(ConfirmDialogComponent, {
-        data: {roomId : roomId}
+        data: { type: 'roomId', value: roomId },
       });
 
       timer=setInterval(()=>{
         closeDialog()
-      },60000)
+      },40000)
 
     userDialogRef.afterClosed().subscribe((result) => {
      clearInterval(timer)
