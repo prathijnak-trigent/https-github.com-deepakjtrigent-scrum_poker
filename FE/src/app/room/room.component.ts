@@ -72,7 +72,9 @@ export class RoomComponent implements OnInit, OnDestroy {
                 if (user.userId == this.user.userId) this.user = user;
 
                 this.usersArray.push({
-                  actionType: 'STORY_POINT_PENDING',
+                  actionType: user.data?.storyPoints
+                    ? 'STORY_POINT_SELECTION'
+                    : 'STORY_POINT_PENDING',
                   userData: user,
                 });
               });
@@ -217,6 +219,7 @@ export class RoomComponent implements OnInit, OnDestroy {
     userDetails.jobRole = this.userJobRole;
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
       (response) => {
+        console.log(response);
         this.websocketService.connect(this.roomId);
         this.heartBeat.startwithHeartBeat(this.roomId);
       },
