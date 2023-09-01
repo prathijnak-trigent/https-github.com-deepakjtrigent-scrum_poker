@@ -256,7 +256,8 @@ export class RoomComponent implements OnInit, OnDestroy {
               ? JSON.parse(userInCookies).displayName
               : '',
           },
-          width: '400px',
+          width: '310px',
+          height:'450px',
         });
 
       userDialogRef.afterClosed().subscribe((response: any): void => {
