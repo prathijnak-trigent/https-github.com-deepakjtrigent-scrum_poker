@@ -11,6 +11,19 @@ module.exports = {
         "text-pale-color": "#e5effe",
         "scrum-background-color": "#ffffff",
         "scrum-text-color": "#848b99",
+        "scrum-button-inner-text":"#000e51",
+        "scrum-button-inner-background":"#c7cce5",
+        "scrum-landing-page-text":"#4f5ba6",
+        "scrum-landing-text":"#000c45",
+        "logo":"#1c2939",
+        "hover-color":"#b5beeb",
+        "active-color":"#929fe0",
+        "card-darkest":"#39458a",
+        "card-dark-color":"#6974b1",
+        "card-light":"#9da4cf",
+        "main-text":"#3d4450"
+
+
       },
       animation: {
         "card-animation": "card 0.4s",
@@ -45,6 +58,12 @@ module.exports = {
       fontFamily: {
         "card-points": ["Roboto Mono"],
         "card-font": ["Space Mono"],
+        "main-text":["Montserrat"],
+        "inner-text":["Roboto"],
+        "poppins":["Poppins"],
+        "main-textt":["Noto Sans Chorasmian"]
+        
+        
       },
     },
   },

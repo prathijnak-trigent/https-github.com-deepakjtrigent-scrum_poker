@@ -1,58 +1,74 @@
-<h1 class="block p-4 text-2xl font-bold font-sans">Enter Details</h1>
-<div id="job-role-icon">
-  <span id="icon">{{ data.img }}</span>
-  <p class="job-role" id="selectedjobRole">{{ data.role }}</p>
-</div>
-<mat-dialog-content>
-  <form [formGroup]="userFormGroup">
-    <mat-form-field>
-      <mat-label>Display</mat-label>
-      <input
-        matInput
-        formControlName="displayName"
-        placeholder="Display Name"
-        type="text"
-        required
-       
-      />
-      <mat-error *ngIf="displayName.invalid && displayName.touched">
-        {{ getErrorMessage() }}
-      </mat-error>
-    </mat-form-field>
+<div class="container1">
+  <h1 class="block p-4 text-lg font-medium font-inner-text ml-4">
+    Enter Details
+  </h1>
+  <div id="job-role-icon">
+    <span id="icon">{{ data.img }}</span>
+    <p class="job-role" id="selectedjobRole">{{ data.role }}</p>
+  </div>
+  <mat-dialog-content>
+    <form [formGroup]="userFormGroup">
+      
+        <!-- <input
+          matInput
+          class="rounded-2xl aaaa"
+          formControlName="displayName"
+          class="pl-2"
+          placeholder="Display Name"
+          type="text"
+          required
+        /> -->
+        <div class="abcd">
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          formControlName="displayName"
+          placeholder="Display Name"
+          type="text"
+          required
+        />
+        <div class="error" *ngIf="displayName.invalid && displayName.touched">
+          {{ getErrorMessage() }}
+        </div>
+      </div>
+      
 
-    <mat-form-field>
-      <mat-label>Job Role</mat-label>
-      <mat-select
-        formControlName="selectedJobRole"
-        (selectionChange)="onRoleSelected()"
-        placeholder="Choose a Role"
-        required
-      >
-        <mat-option value="Select Here" disabled>Choose a Role</mat-option>
-        <mat-option
-          [value]="role.role"
-          *ngFor="let role of emojiData; let index = index"
+      <mat-form-field>
+        <mat-label>Job Role</mat-label>
+        <mat-select
+          formControlName="selectedJobRole"
+          (selectionChange)="onRoleSelected()"
+          placeholder="Choose a Role"
+          required
         >
-          {{ role.role }}
-        </mat-option>
-      </mat-select>
-      <mat-error *ngIf="selectedJobRole.invalid && selectedJobRole.touched">
-        {{ getSelectedJobRoleErrorMessage() }}
-      </mat-error>
-    </mat-form-field>
-  </form>
-</mat-dialog-content>
+          <mat-option value="Select Here" disabled>Choose a Role</mat-option>
+          <mat-option
+            [value]="role.role"
+            *ngFor="let role of emojiData; let index = index"
+            style="font-size: small"
+            class=" text-main-text"
+          >
+            {{ role.role }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="selectedJobRole.invalid && selectedJobRole.touched">
+          {{ getSelectedJobRoleErrorMessage() }}
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </mat-dialog-content>
 
-<mat-dialog-actions align="end">
-  <button
-    mat-raised-button
-    color="primary"
-    [mat-dialog-close]="{
-      displayName: displayName.value,
-      selectedJobRole: selectedJobRole.value
-    }"
-    [disabled]="userFormGroup.invalid"
-  >
-    Enter Room
-  </button>
-</mat-dialog-actions>
+  <mat-dialog-actions align="end">
+    <button
+      [mat-dialog-close]="{
+        displayName: displayName.value,
+        selectedJobRole: selectedJobRole.value
+      }"
+      [disabled]="userFormGroup.invalid"
+      class="bg-scrum-button-inner-background hover:bg-hover-color active:bg-active-color font-medium text-scrum-button-inner-text py-3 mr-3 ml-6 mb-2 rounded-lg w-2/6"
+    >
+      Enter Room
+    </button>
+  </mat-dialog-actions>
+</div>
