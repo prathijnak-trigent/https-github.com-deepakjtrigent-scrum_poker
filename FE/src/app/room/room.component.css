@@ -7,6 +7,7 @@
   
 .card-hover:hover{
     transform: translateY(-10px) scale(1.1);
+    color: white;
     transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1), background-color 0.4s ease;
 }
 #card_button{
@@ -23,4 +24,32 @@ font-family: 'Space Mono' !important;
 }
 .section2{
   overflow:"scroll";
+}
+/* .scrollable-menu {
+  max-height: 100px;
+  overflow-y: auto;
+} */
+.scrollable-menu {
+  padding: 6px 20px;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 200px;
+  overflow:scroll;
+}
+
+/* .scrollable {
+  overflow-y: auto;
+} */
+::ng-deep div#mat-menu-panel-0{
+  /* background: red !important; */
+  box-shadow: 0 1px 2px 1px rgba(168,182,191,.6);
+  border-radius: 10px;
+}
+
+::ng-deep div#cdk-overlay-0{
+  box-shadow: 0 1px 2px 1px rgba(168,182,191,.6);
+  border-radius: 10px;
+  /* background: red !important; */
+
 }
