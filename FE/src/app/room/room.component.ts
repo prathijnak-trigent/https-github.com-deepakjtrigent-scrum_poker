@@ -69,8 +69,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           switch (userData.actionType) {
             case 'ACTIVE_USERS_LIST': {
               (userData.userData as UserData[]).forEach((user: UserData) => {
-                if (user.userId == this.user.userId)
-                  this.user = user;
+                if (user.userId == this.user.userId) this.user = user;
 
                 this.usersArray.push({
                   actionType: 'STORY_POINT_PENDING',
@@ -150,12 +149,13 @@ export class RoomComponent implements OnInit, OnDestroy {
 
               this.usersArray.forEach((usersDetails: UserAction) => {
                 if (
-                  (usersDetails.userData as UserData).userId ==
-                  (userData.userData as UserData[])[0].userId
+                  (userData.userData as UserData[])[0].userId ==
+                  (usersDetails.userData as UserData).userId
                 ) {
                   (usersDetails.userData as UserData).isAdmin = (
                     userData.userData as UserData[]
                   )[0].isAdmin;
+                  return;
                 } else if (
                   (usersDetails.userData as UserData).userId ==
                   (userData.userData as UserData[])[1].userId
@@ -176,7 +176,7 @@ export class RoomComponent implements OnInit, OnDestroy {
   public ngOnDestroy(): void {
     this.websocketService.disconnect();
     this.messageSubsscription.unsubscribe();
-    this.heartBeat.destroyHeartbeat()
+    this.heartBeat.destroyHeartbeat();
   }
 
   public updateStoryPoints(storyPoints: number, index: number): void {
@@ -215,7 +215,6 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   public joinRoom(userDetails: User): void {
     userDetails.jobRole = this.userJobRole;
-    console.log(userDetails);
     this.roomService.joinRoom(this.roomId, userDetails).subscribe(
       (response) => {
         this.websocketService.connect(this.roomId);
@@ -239,8 +238,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     this.userJobRole = jobRole;
 
     if (userInCookies) {
-       this.isDataStored=true
-       this.user = JSON.parse(userInCookies);
+      this.isDataStored = true;
+      this.user = JSON.parse(userInCookies);
     }
 
     if (!jobRole || !userInCookies) {
@@ -259,11 +258,11 @@ export class RoomComponent implements OnInit, OnDestroy {
 
       userDialogRef.afterClosed().subscribe((response: any): void => {
         if (response) {
-          if(!userInCookies){
-          this.user.userId = uuidv4();
-          this.user.displayName = response.displayName;
-          this.userJobRole = response.selectedJobRole;
-          this.storageService.storeUserInCookies(this.user);
+          if (!userInCookies) {
+            this.user.userId = uuidv4();
+            this.user.displayName = response.displayName;
+            this.userJobRole = response.selectedJobRole;
+            this.storageService.storeUserInCookies(this.user);
           }
           this.userJobRole = response.selectedJobRole;
           this.storageService.storeJobRole(response.selectedJobRole);
@@ -407,8 +406,6 @@ export class RoomComponent implements OnInit, OnDestroy {
     }
     this.averageStoryPointsValue = storyPointsSum / this.selectedPoints.length;
   }
-
-
 
   private reset(): void {
     this.selectedPoints.length = 0;
